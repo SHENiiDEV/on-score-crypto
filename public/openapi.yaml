@@ -1,0 +1,365 @@
+openapi: 3.0.3
+info:
+  title: On-Score B2B Intelligence & Player Scoring API
+  version: 1.0.0
+  description: |
+    # on-score.io On-Chain Player Intelligence Platform
+
+    The On-Score API delivers real-time on-chain analytics, 0–100 player scoring, VIP/whale identification, liquid balance detection, and historical gambling footprint discovery across multiple blockchains (**TRON**, **Bitcoin**, **Ethereum**, **BNB Chain (BSC)**, **Solana**).
+
+    ### Authentication
+    Every request requires standard API credentials passed via HTTP headers:
+    * `X-API-Key`: Your live public API Key ID (`ons_live_...`)
+    * `X-API-Secret`: Your private secret key (`ons_sec_...`)
+    * Alternatively, Bearer authentication can be passed as `Authorization: Bearer <api_key>:<api_secret>`
+
+    ### Multi-Chain Support
+    * **TRON**: `tron`, `trc20` (TRX, USDT TRC-20)
+    * **Bitcoin**: `bitcoin`, `btc` (BTC Native, SegWit, Taproot)
+    * **Ethereum**: `ethereum`, `eth` (ETH, USDT ERC-20, USDC ERC-20, DAI)
+    * **BNB Chain**: `bsc`, `bnb`, `bep20` (BNB, USDT BEP-20, USDC BEP-20)
+    * **Solana**: `solana`, `sol` (SOL, USDT SPL, USDC SPL)
+
+servers:
+  - url: http://127.0.0.1:5555/api/v1
+    description: Local Test Environment
+  - url: https://api.on-score.io/api/v1
+    description: Production API Gateway
+
+paths:
+  /analyses:
+    post:
+      summary: Analyze Single Crypto Wallet
+      description: Performs full on-chain analysis on a crypto wallet address, computes VIP score, detects visible liquid balance, and flags historical gambling interactions.
+      tags:
+        - Analyses
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - network
+                - address
+              properties:
+                network:
+                  type: string
+                  enum: [tron, bitcoin, ethereum, bsc, solana]
+                  example: tron
+                address:
+                  type: string
+                  example: TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx
+                external_player_id:
+                  type: string
+                  example: player_casino_9911
+                context:
+                  type: object
+                  properties:
+                    deposit_amount:
+                      type: number
+                      example: 100
+                    deposit_asset:
+                      type: string
+                      example: USDT
+                    deposit_tx_hash:
+                      type: string
+                      example: 0x3efbc3a1bf4ff998f5edce5662d8be1dc...
+      responses:
+        '201':
+          description: Wallet analysis completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisReport'
+        '400':
+          description: Invalid request payload or address format.
+        '401':
+          description: Invalid or missing API credentials.
+        '402':
+          description: Insufficient credit balance.
+
+    get:
+      summary: List Wallet Analyses History
+      description: Returns a paginated list of past player analyses performed by your account.
+      tags:
+        - Analyses
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: network
+          in: query
+          schema:
+            type: string
+        - name: segment
+          in: query
+          schema:
+            type: string
+            enum: [super_vip, potential_vip, high_value, good_player, regular, low_value]
+      responses:
+        '200':
+          description: Paginated analyses list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnalysisSummary'
+                  current_page:
+                    type: integer
+                  total:
+                    type: integer
+
+  /analyses/{id}:
+    get:
+      summary: Get Analysis Report by ID
+      description: Retrieves the immutable on-chain snapshot and intelligence report for a specific analysis ID.
+      tags:
+        - Analyses
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 01m1xn8954a6bye6x91mhtjmkk
+      responses:
+        '200':
+          description: Analysis Report found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisReport'
+        '404':
+          description: Analysis not found.
+
+  /batches:
+    post:
+      summary: Create Batch Wallet Scoring
+      description: Submits a batch of up to 100 crypto wallet addresses for parallel scoring.
+      tags:
+        - Batches
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - wallets
+              properties:
+                wallets:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - network
+                      - address
+                    properties:
+                      network:
+                        type: string
+                        example: tron
+                      address:
+                        type: string
+                        example: TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx
+                      external_player_id:
+                        type: string
+                        example: player_1
+      responses:
+        '202':
+          description: Batch job accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batch_job_id:
+                    type: string
+                  status:
+                    type: string
+                    example: processing
+                  total_wallets:
+                    type: integer
+
+  /batches/{id}/results:
+    get:
+      summary: Get Batch Results
+      description: Returns progress and completed analysis snapshots for a batch job.
+      tags:
+        - Batches
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Batch job status and scored results.
+
+  /account/credits:
+    get:
+      summary: Check Credit Balance & Audit Ledger
+      description: Returns current available credit balance, account status, and recent credit audit ledger entries.
+      tags:
+        - Account & Credits
+      security:
+        - ApiKeyAuth: []
+          ApiSecretAuth: []
+      responses:
+        '200':
+          description: Account credits status.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                  account_name:
+                    type: string
+                  credit_balance:
+                    type: integer
+                    example: 9999
+                  status:
+                    type: string
+                    example: active
+                  ledger_recent:
+                    type: array
+                    items:
+                      type: object
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    ApiSecretAuth:
+      type: apiKey
+      in: header
+      name: X-API-Secret
+
+  schemas:
+    AnalysisReport:
+      type: object
+      properties:
+        analysis_id:
+          type: string
+          example: 01m1xn8954a6bye6x91mhtjmkk
+        status:
+          type: string
+          example: completed
+        address:
+          type: string
+          example: TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx
+        network:
+          type: string
+          example: tron
+        credits:
+          type: object
+          properties:
+            charged:
+              type: integer
+              example: 3
+        wallet:
+          type: object
+          properties:
+            visible_balance_usd:
+              type: number
+              example: 272.40
+            wallet_age_days:
+              type: integer
+              example: 340
+            transactions_count:
+              type: integer
+              example: 118
+            is_custodial_cex:
+              type: boolean
+              example: false
+        score:
+          type: object
+          properties:
+            value:
+              type: integer
+              example: 88
+            segment:
+              type: string
+              example: potential_vip
+            key_drivers:
+              type: array
+              items:
+                type: string
+              example: ["high_gambling_affinity", "veteran_wallet"]
+            custom_tags:
+              type: array
+              items:
+                type: string
+              example: ["SUPER_SHARK"]
+        gambling:
+          type: object
+          properties:
+            status:
+              type: string
+              example: detected
+            entities_count:
+              type: integer
+              example: 2
+            entities_list:
+              type: array
+              items:
+                type: string
+              example: ["Stake.com", "Rollbit"]
+            outgoing_365d_usd:
+              type: number
+              example: 38200.00
+            incoming_365d_usd:
+              type: number
+              example: 10000.00
+            total_flow_365d_usd:
+              type: number
+              example: 48200.00
+
+    AnalysisSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        network:
+          type: string
+        score_value:
+          type: integer
+        segment:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string

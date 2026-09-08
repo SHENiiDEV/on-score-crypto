@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "8f3e5e41-0a42-4b71-9c88-1234567890ab",
+		"name": "OnScore B2B Intelligence API v1",
+		"description": "Postman Collection for OnScore.io On-Chain Gambling Intelligence & Player Scoring Platform.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Single Wallet Analysis (TRON USDT)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"network\": \"tron\",\n    \"address\": \"TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx\",\n    \"external_player_id\": \"player_casino_101\",\n    \"context\": {\n        \"deposit_amount\": 100,\n        \"deposit_asset\": \"USDT\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/analyses",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"analyses"
+					]
+				},
+				"description": "Analyze a single crypto wallet on deposit to detect VIP status, liquid balance, and gambling history."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Single Wallet Analysis (Bitcoin BTC)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"network\": \"bitcoin\",\n    \"address\": \"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\",\n    \"external_player_id\": \"btc_player_7788\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/analyses",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"analyses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Single Wallet Analysis (Ethereum ETH / USDT ERC-20)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"network\": \"ethereum\",\n    \"address\": \"0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe\",\n    \"external_player_id\": \"eth_vip_player_01\",\n    \"context\": {\n        \"deposit_amount\": 500,\n        \"deposit_asset\": \"USDT\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/analyses",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"analyses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get Analysis Report by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/analyses/:analysis_id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"analyses",
+						":analysis_id"
+					],
+					"variable": [
+						{
+							"key": "analysis_id",
+							"value": "01m1xn8954a6bye6x91mhtjmkk"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. List Analysis History",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/analyses?per_page=20",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"analyses"
+					],
+					"query": [
+						{
+							"key": "per_page",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Batch Wallet Scoring",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"wallets\": [\n        {\n            \"network\": \"tron\",\n            \"address\": \"TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx\",\n            \"external_player_id\": \"player_1\"\n        },\n        {\n            \"network\": \"tron\",\n            \"address\": \"TVipWhalePlayerAddressTron7788991122\",\n            \"external_player_id\": \"player_vip\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/batches",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"batches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Check Account Credit Balance",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "X-API-Secret",
+						"value": "{{apiSecret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/account/credits",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"account",
+						"credits"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8080",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "ons_live_TEI5X99mrBCapeCaTeoLLfWm",
+			"type": "string"
+		},
+		{
+			"key": "apiSecret",
+			"value": "YOUR_GENERATED_SECRET",
+			"type": "string"
+		}
+	]
+}
