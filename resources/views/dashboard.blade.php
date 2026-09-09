@@ -138,7 +138,7 @@
                     <span class="text-xs text-slate-500 font-mono font-bold">POST /api/v1/analyses</span>
                 </div>
                 <div class="mt-3 bg-slate-900 text-slate-100 rounded-xl p-4 font-mono text-xs overflow-x-auto shadow-inner">
-                    <span class="text-emerald-400">curl</span> -X POST http://127.0.0.1:8080/api/v1/analyses \<br>
+                    <span class="text-emerald-400">curl</span> -X POST https://on-score.io/api/v1/analyses \<br>
                     &nbsp;&nbsp;-H <span class="text-amber-300">"X-API-Key: {{ $apiClient?->key_id }}"</span> \<br>
                     &nbsp;&nbsp;-H <span class="text-amber-300">"X-API-Secret: ons_sec_demo_secret_apex_778899aabbcc"</span> \<br>
                     &nbsp;&nbsp;-H <span class="text-emerald-400">"Content-Type: application/json"</span> \<br>

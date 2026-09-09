@@ -765,7 +765,7 @@
 
                     <!-- Tab: cURL -->
                     <div id="codeView-curl" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
-                        <pre id="codeSnippet-curl">curl -X POST http://127.0.0.1:8080/api/v1/analyses \
+                        <pre id="codeSnippet-curl">curl -X POST https://on-score.io/api/v1/analyses \
   -H "X-API-Key: ons_live_your_api_key_here" \
   -H "X-API-Secret: ons_sec_your_secret_hash_here" \
   -H "Content-Type: application/json" \
@@ -784,7 +784,7 @@
                     <div id="codeView-python" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
                         <pre id="codeSnippet-python">import requests
 
-url = "http://127.0.0.1:8080/api/v1/analyses"
+url = "https://on-score.io/api/v1/analyses"
 headers = {
     "X-API-Key": "ons_live_your_api_key_here",
     "X-API-Secret": "ons_sec_your_secret_hash_here",
@@ -810,7 +810,7 @@ if profile["score"]["segment"] == "super_vip":
                         <pre id="codeSnippet-nodejs">import axios from 'axios';
 
 async function evaluatePlayerDeposit(walletAddress, network = 'tron') {
-  const { data } = await axios.post('http://127.0.0.1:8080/api/v1/analyses', {
+  const { data } = await axios.post('https://on-score.io/api/v1/analyses', {
     network,
     address: walletAddress,
     external_player_id: 'casino_user_9921'
@@ -839,7 +839,7 @@ use Illuminate\Support\Facades\Http;
 $response = Http::withHeaders([
     'X-API-Key' => config('services.onscore.key'),
     'X-API-Secret' => config('services.onscore.secret'),
-])->post('http://127.0.0.1:8080/api/v1/analyses', [
+])->post('https://on-score.io/api/v1/analyses', [
     'network' => 'tron',
     'address' => 'TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx',
     'external_player_id' => 'casino_user_9921',

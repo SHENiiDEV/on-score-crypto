@@ -21,10 +21,10 @@ info:
     * **Solana**: `solana`, `sol` (SOL, USDT SPL, USDC SPL)
 
 servers:
-  - url: http://127.0.0.1:5555/api/v1
-    description: Local Test Environment
-  - url: https://api.on-score.io/api/v1
-    description: Production API Gateway
+  - url: https://on-score.io/api/v1
+    description: Production API Gateway (HTTPS)
+  - url: /api/v1
+    description: Current Environment Host
 
 paths:
   /analyses:

@@ -271,7 +271,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://127.0.0.1:8080",
+			"value": "https://on-score.io",
 			"type": "string"
 		},
 		{

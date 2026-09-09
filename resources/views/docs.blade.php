@@ -69,7 +69,7 @@
                 <div>
                     <div class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-1">1. Base Endpoint</div>
                     <div class="font-mono text-xs bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 select-all">
-                        POST http://127.0.0.1:5555/api/v1/analyses
+                        POST https://on-score.io/api/v1/analyses
                     </div>
                 </div>
                 <div>
