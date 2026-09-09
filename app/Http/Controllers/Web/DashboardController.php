@@ -19,23 +19,25 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $account = Account::first(); // Demo primary B2B account
-        $apiClient = ApiClient::where('account_id', $account->id)->first();
+        $user = auth()->user();
+        $account = $user?->account ?? Account::first();
+        $apiClient = $account ? ApiClient::where('account_id', $account->id)->first() : null;
         
-        $recentAnalyses = Analysis::with('snapshot')
-            ->where('account_id', $account->id)
-            ->latest()
-            ->limit(10)
-            ->get();
+        $query = Analysis::with(['snapshot', 'account']);
+        if ($user && !in_array($user->role, ['superadmin', 'admin']) && $account) {
+            $query->where('account_id', $account->id);
+        }
+        $recentAnalyses = $query->latest()->limit(20)->get();
 
-        $ledgerRecent = CreditLedger::where('account_id', $account->id)
-            ->latest('id')
-            ->limit(10)
-            ->get();
+        $ledgerQuery = CreditLedger::with('account');
+        if ($user && !in_array($user->role, ['superadmin', 'admin']) && $account) {
+            $ledgerQuery->where('account_id', $account->id);
+        }
+        $ledgerRecent = $ledgerQuery->latest('id')->limit(10)->get();
 
         $entitiesCount = Entity::count();
-        $totalAnalysesCount = Analysis::where('account_id', $account->id)->count();
-        $vipCount = Analysis::where('account_id', $account->id)->where('segment', 'potential_vip')->count();
+        $totalAnalysesCount = Analysis::count();
+        $vipCount = Analysis::where('segment', 'potential_vip')->orWhere('score_value', '>=', 80)->count();
 
         return view('dashboard', [
             'account' => $account,
@@ -56,8 +58,9 @@ class DashboardController extends Controller
             'external_player_id' => 'nullable|string',
         ]);
 
-        $account = Account::first();
-        $apiClient = ApiClient::where('account_id', $account->id)->first();
+        $user = auth()->user();
+        $account = $user?->account ?? Account::first();
+        $apiClient = $account ? ApiClient::where('account_id', $account->id)->first() : null;
 
         try {
             $analysis = $this->analysisService->executeAnalysis(
@@ -78,14 +81,17 @@ class DashboardController extends Controller
 
     public function report(string $id)
     {
-        $account = Account::first();
-        $analysis = Analysis::with('snapshot')
-            ->where('account_id', $account->id)
-            ->where('id', $id)
-            ->firstOrFail();
+        $user = auth()->user();
+        $account = $user?->account ?? Account::first();
+        
+        $query = Analysis::with(['snapshot', 'account'])->where('id', $id);
+        if ($user && !in_array($user->role, ['superadmin', 'admin']) && $account) {
+            $query->where('account_id', $account->id);
+        }
+        $analysis = $query->firstOrFail();
 
         return view('report', [
-            'account' => $account,
+            'account' => $analysis->account ?? $account,
             'analysis' => $analysis,
             'snapshot' => $analysis->snapshot,
         ]);

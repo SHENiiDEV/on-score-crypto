@@ -33,6 +33,7 @@ class AdminController extends Controller
         $totalAnalyses = Analysis::count();
         $totalEntities = Entity::count();
         $recentLedger = CreditLedger::with('account')->latest('id')->limit(15)->get();
+        $recentAnalyses = Analysis::with(['snapshot', 'account', 'apiClient'])->latest()->limit(25)->get();
 
         return view('admin.dashboard', [
             'accounts' => $accounts,
@@ -41,6 +42,7 @@ class AdminController extends Controller
             'totalAnalyses' => $totalAnalyses,
             'totalEntities' => $totalEntities,
             'recentLedger' => $recentLedger,
+            'recentAnalyses' => $recentAnalyses,
         ]);
     }
 

@@ -371,6 +371,123 @@
             </table>
         </div>
     </div>
+
+    <!-- Recent Live Analyses (All Accounts) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 card-shadow">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-base font-extrabold text-slate-900 flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Live Analyzed & Scored Wallets (System-Wide)</span>
+                </h3>
+                <p class="text-xs text-slate-500">Real-time incoming analyses triggered via API and Web Portal.</p>
+            </div>
+            <a href="{{ route('dashboard') }}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                Open Scoring Portal &rarr;
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="border-b border-slate-200 text-slate-400 uppercase font-bold text-[10px]">
+                        <th class="py-3 px-3">Network / Wallet Address</th>
+                        <th class="py-3 px-3">B2B Client / Source</th>
+                        <th class="py-3 px-3">Score & Segment</th>
+                        <th class="py-3 px-3">Gambling Flow (365d)</th>
+                        <th class="py-3 px-3">Status</th>
+                        <th class="py-3 px-3">Time</th>
+                        <th class="py-3 px-3 text-right">Dossier</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                    @forelse($recentAnalyses as $item)
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3.5 px-3">
+                            <div class="flex items-center space-x-2">
+                                @php
+                                    $netBadge = match($item->network) {
+                                        'ethereum' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                                        'tron' => 'bg-rose-100 text-rose-800 border-rose-200',
+                                        'bsc' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                        'solana' => 'bg-teal-100 text-teal-800 border-teal-200',
+                                        'bitcoin' => 'bg-orange-100 text-orange-800 border-orange-200',
+                                        default => 'bg-slate-100 text-slate-800 border-slate-200',
+                                    };
+                                @endphp
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border {{ $netBadge }}">
+                                    {{ $item->network }}
+                                </span>
+                                <span class="font-mono font-bold text-slate-900 select-all" title="{{ $item->address }}">
+                                    {{ Str::limit($item->address, 16) }}
+                                </span>
+                            </div>
+                            @if($item->external_player_id)
+                                <div class="text-[10px] text-slate-400 font-mono mt-0.5">Player: {{ $item->external_player_id }}</div>
+                            @endif
+                        </td>
+                        <td class="py-3.5 px-3">
+                            <div class="font-bold text-slate-900">{{ $item->account->name ?? 'System' }}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">
+                                {{ $item->apiClient ? $item->apiClient->name : 'Web UI Analysis' }}
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-3">
+                            @if($item->score_value !== null)
+                                @php
+                                    $badgeColor = match($item->segment) {
+                                        'super_vip' => 'bg-purple-100 text-purple-800 border-purple-300 font-black',
+                                        'potential_vip' => 'bg-amber-100 text-amber-800 border-amber-300',
+                                        'high_value' => 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                                        'good_player' => 'bg-blue-100 text-blue-800 border-blue-300',
+                                        'regular' => 'bg-slate-100 text-slate-800 border-slate-300',
+                                        default => 'bg-rose-100 text-rose-800 border-rose-300',
+                                    };
+                                @endphp
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-black text-sm font-mono text-slate-900">{{ $item->score_value }}/100</span>
+                                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full border {{ $badgeColor }}">
+                                        {{ strtoupper(str_replace('_', ' ', $item->segment)) }}
+                                    </span>
+                                </div>
+                            @else
+                                <span class="text-slate-400">—</span>
+                            @endif
+                        </td>
+                        <td class="py-3.5 px-3">
+                            @if($item->snapshot)
+                                <div class="text-slate-900 font-mono font-bold">${{ number_format($item->snapshot->gambling_intelligence['total_flow_365d_usd'] ?? 0) }}</div>
+                                <div class="text-[10px] text-slate-500 font-semibold">{{ $item->snapshot->gambling_intelligence['entities_count'] ?? 0 }} identified casinos</div>
+                            @else
+                                <span class="text-slate-400">—</span>
+                            @endif
+                        </td>
+                        <td class="py-3.5 px-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ $item->status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                {{ $item->status }}
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-3 text-slate-500 font-mono text-[11px]">
+                            {{ $item->created_at->diffForHumans() }}
+                        </td>
+                        <td class="py-3.5 px-3 text-right">
+                            <a href="{{ route('dashboard.report', ['id' => $item->id]) }}" class="inline-flex items-center space-x-1 text-indigo-600 hover:text-indigo-900 font-extrabold hover:underline">
+                                <span>Report</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="py-6 text-center text-slate-400">
+                            No analyses recorded in the system yet. Run an analysis via API or web form.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
