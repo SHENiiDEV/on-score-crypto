@@ -28,6 +28,38 @@ class BatchController extends Controller
         /** @var ApiClient|null $apiClient */
         $apiClient = $request->attributes->get('api_client');
 
+        $input = $request->all();
+        if (isset($input['wallets']) && is_array($input['wallets'])) {
+            $networkMap = [
+                'eth' => 'ethereum',
+                'ethereum' => 'ethereum',
+                'trx' => 'tron',
+                'tron' => 'tron',
+                'trc20' => 'tron',
+                'btc' => 'bitcoin',
+                'bitcoin' => 'bitcoin',
+                'sol' => 'solana',
+                'solana' => 'solana',
+                'bsc' => 'bsc',
+                'bnb' => 'bsc',
+                'bep20' => 'bsc',
+            ];
+            foreach ($input['wallets'] as $idx => $w) {
+                if (is_array($w)) {
+                    if (isset($w['chain']) && !isset($w['network'])) {
+                        $input['wallets'][$idx]['network'] = $w['chain'];
+                    }
+                    if (isset($input['wallets'][$idx]['network'])) {
+                        $nKey = strtolower(trim($input['wallets'][$idx]['network']));
+                        if (isset($networkMap[$nKey])) {
+                            $input['wallets'][$idx]['network'] = $networkMap[$nKey];
+                        }
+                    }
+                }
+            }
+        }
+        $request->merge($input);
+
         $validator = Validator::make($request->all(), [
             'wallets' => 'required|array|min:1|max:500',
             'wallets.*.address' => 'required|string',

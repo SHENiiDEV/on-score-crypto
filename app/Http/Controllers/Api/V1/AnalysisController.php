@@ -28,6 +28,32 @@ class AnalysisController extends Controller
         /** @var ApiClient|null $apiClient */
         $apiClient = $request->attributes->get('api_client');
 
+        $input = $request->all();
+        if (isset($input['chain']) && !isset($input['network'])) {
+            $input['network'] = $input['chain'];
+        }
+        if (isset($input['network'])) {
+            $networkMap = [
+                'eth' => 'ethereum',
+                'ethereum' => 'ethereum',
+                'trx' => 'tron',
+                'tron' => 'tron',
+                'trc20' => 'tron',
+                'btc' => 'bitcoin',
+                'bitcoin' => 'bitcoin',
+                'sol' => 'solana',
+                'solana' => 'solana',
+                'bsc' => 'bsc',
+                'bnb' => 'bsc',
+                'bep20' => 'bsc',
+            ];
+            $normalizedKey = strtolower(trim($input['network']));
+            if (isset($networkMap[$normalizedKey])) {
+                $input['network'] = $networkMap[$normalizedKey];
+            }
+        }
+        $request->merge($input);
+
         $validator = Validator::make($request->all(), [
             'address' => 'required|string|min:10|max:120',
             'network' => 'required|string|in:tron,ethereum,bsc,solana,bitcoin',

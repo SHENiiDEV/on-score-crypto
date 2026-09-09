@@ -230,4 +230,19 @@ class OnScoreApiTest extends TestCase
             ->assertSee('SUPER VIP')
             ->assertSee('Player On-Chain Intelligence Profile');
     }
+
+    public function test_score_wallet_alias_and_chain_parameter_works_with_bearer_token(): void
+    {
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer {$this->keyId}",
+        ])->postJson('/api/v1/score/wallet', [
+            'chain' => 'ETH',
+            'address' => '0x28c6c06298d514db089934071355e5743bf21d60',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('status', 'completed')
+            ->assertJsonPath('network', 'ethereum')
+            ->assertJsonPath('address', '0x28c6c06298d514db089934071355e5743bf21d60');
+    }
 }
