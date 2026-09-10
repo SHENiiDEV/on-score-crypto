@@ -28,16 +28,16 @@ class DocsPageTest extends TestCase
         $response->assertSee('On-Score B2B Intelligence', false);
     }
 
-    public function test_landing_page_renders_with_payadmit_style_and_simulator(): void
+    public function test_landing_page_renders_with_stripe_style_and_simulator(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('On-Score');
-        $response->assertSee('SUPER_SHARK');
-        $response->assertSee('How On-Score Analyzes Players');
+        $response->assertSee('on-score');
+        $response->assertSee('SUPER_VIP_SHARK');
         $response->assertSee('5 Chains');
-        $response->assertSee('Developer Integration');
+        $response->assertSee('Live Crypto Scoring Simulator');
+        $response->assertSee('ENGINEERED FOR DEVELOPERS');
     }
 }
 

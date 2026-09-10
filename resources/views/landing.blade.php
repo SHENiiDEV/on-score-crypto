@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>on-score.io — B2B On-Chain Player Intelligence & Crypto Scoring Gateway</title>
+    <title>on-score.io — On-Chain Player Intelligence & Crypto Scoring Infrastructure</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,31 +21,45 @@
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        night: {
-                            950: '#060913',
-                            900: '#0b1120',
-                            850: '#0f172a',
-                            800: '#1e293b',
-                            750: '#283548',
+                        stripe: {
+                            navy: '#0a2540',
+                            slate: '#425466',
+                            muted: '#697386',
+                            light: '#f6f9fc',
+                            border: '#e6ebf1',
+                            indigo: '#635bff',
+                            'indigo-hover': '#5851ea',
+                            cyan: '#00d4ff',
+                            pink: '#ff6080',
+                            amber: '#ffa84a',
+                            purple: '#7a73ff',
+                            emerald: '#00d66f',
+                            darkbg: '#081726',
+                        }
+                    },
+                    keyframes: {
+                        'float-slow': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         },
-                        brand: {
-                            emerald: '#10b981',
-                            indigo: '#6366f1',
-                            amber: '#f59e0b',
-                            cyan: '#06b6d4',
-                            purple: '#8b5cf6',
-                            rose: '#f43f5e',
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(8px)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+                            '50%': { opacity: '0.9', transform: 'scale(1.05)' },
+                        },
+                        'shimmer': {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(200%)' }
                         }
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                        }
+                        'float': 'float-slow 6s ease-in-out infinite',
+                        'float-rev': 'float-reverse 7s ease-in-out infinite',
+                        'glow': 'pulse-glow 5s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite',
                     }
                 }
             }
@@ -54,238 +68,324 @@
 
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #060913;
-            color: #0f172a;
-        }
-        
-        .hero-mesh {
-            background-color: #060913;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.22) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-                radial-gradient(at 80% 80%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #ffffff;
+            color: #425466;
+            overflow-x: hidden;
         }
 
-        .grid-pattern {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
-
-        .dark-glass {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.10);
-        }
-
-        .dark-glass-card {
-            background: rgba(11, 17, 32, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-        }
-
-        .gradient-border-card {
+        /* Stripe Signature Diagonal Mesh Gradient Background */
+        .stripe-hero-canvas {
             position: relative;
-            border-radius: 1.5rem;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .stripe-gradient-mesh {
+            position: absolute;
+            top: -240px;
+            right: -180px;
+            width: 1200px;
+            height: 950px;
+            background: 
+                radial-gradient(circle at 75% 30%, rgba(255, 96, 128, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 45% 45%, rgba(122, 115, 255, 0.55) 0%, transparent 50%),
+                radial-gradient(circle at 85% 70%, rgba(255, 168, 74, 0.45) 0%, transparent 40%),
+                radial-gradient(circle at 30% 70%, rgba(0, 212, 255, 0.45) 0%, transparent 45%),
+                linear-gradient(135deg, rgba(99, 91, 255, 0.4) 0%, rgba(255, 96, 128, 0.25) 100%);
+            filter: blur(75px);
+            opacity: 0.9;
+            transform: rotate(-12deg) skew(-8deg);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Diffused Stripe Glass Card */
+        .stripe-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04);
+            border: 1px solid #e6ebf1;
+            border-radius: 1.5rem;
+            box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.06);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .gradient-border-card:hover {
-            border-color: #c7d2fe;
-            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.10);
+        .stripe-card:hover {
+            box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.12);
             transform: translateY(-3px);
         }
 
-        .glow-dot {
-            box-shadow: 0 0 12px currentColor;
+        .stripe-glass-hero {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.18), 0 18px 36px -18px rgba(0, 0, 0, 0.14);
         }
 
-        /* Syntax colors */
-        .syn-key { color: #93c5fd; }
-        .syn-str { color: #34d399; }
-        .syn-num { color: #fbbf24; }
-        .syn-bool { color: #f472b6; }
-        .syn-null { color: #94a3b8; }
-        .syn-comm { color: #64748b; font-style: italic; }
+        .stripe-dark-card {
+            background: #081726;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .stripe-pill-button {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .stripe-pill-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 91, 255, 0.35);
+        }
+        .stripe-pill-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Syntax styling */
+        .syn-key { color: #7dd3fc; font-weight: 600; }
+        .syn-str { color: #a7f3d0; }
+        .syn-num { color: #fde047; font-weight: 700; }
+        .syn-bool { color: #f472b6; font-weight: 700; }
+        .syn-tag { color: #c084fc; font-weight: 700; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="antialiased selection:bg-stripe-indigo selection:text-white">
 
-    <!-- Top Floating Dark Header (PayAdmit Style) -->
-    <header class="fixed top-0 inset-x-0 z-50 bg-night-950/80 backdrop-blur-xl border-b border-white/10 transition-all">
+    <!-- ========================================== -->
+    <!-- 1. NAVIGATION (Stripe Style)               -->
+    <!-- ========================================== -->
+    <header class="relative z-30 w-full transition-all bg-white/80 backdrop-blur-md border-b border-stripe-border/60 sticky top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-6">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-8">
                 <a href="/" class="flex items-center space-x-3 group">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-emerald-500 to-cyan-400 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition transform">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-stripe-indigo via-stripe-purple to-stripe-pink flex items-center justify-center font-black text-white text-xl shadow-lg shadow-stripe-indigo/25 group-hover:scale-105 transition-transform">
                         O
                     </div>
-                    <div>
-                        <div class="flex items-center space-x-1.5">
-                            <span class="text-2xl font-black tracking-tight text-white">On-Score</span>
-                            <span class="text-emerald-400 text-2xl font-black">.io</span>
-                        </div>
-                        <span class="text-[9px] uppercase font-extrabold tracking-widest text-indigo-300 block -mt-1">Player Intelligence</span>
+                    <div class="flex flex-col">
+                        <span class="text-2xl font-black tracking-tight text-stripe-navy font-sans">
+                            on-score<span class="text-stripe-indigo">.io</span>
+                        </span>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-stripe-slate -mt-1">
+                            Intelligence Infrastructure
+                        </span>
                     </div>
                 </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden lg:flex items-center space-x-7 text-sm font-bold text-stripe-navy">
+                    <a href="#features" class="text-stripe-slate hover:text-stripe-navy transition">Features</a>
+                    <a href="#simulator" class="text-stripe-slate hover:text-stripe-navy transition flex items-center space-x-1.5">
+                        <span>Live Simulator</span>
+                        <span class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-stripe-indigo/10 text-stripe-indigo">Interactive</span>
+                    </a>
+                    <a href="#developers" class="text-stripe-slate hover:text-stripe-navy transition">API & SDKs</a>
+                    <a href="#architecture" class="text-stripe-slate hover:text-stripe-navy transition">Entity Clusters</a>
+                    <a href="/docs" class="text-stripe-slate hover:text-stripe-navy transition">API Docs</a>
+                </nav>
             </div>
 
-            <nav class="hidden lg:flex items-center space-x-8 text-xs font-bold text-slate-300">
-                <a href="#how-it-works" class="hover:text-emerald-400 transition">How It Works</a>
-                <a href="#live-demo" class="hover:text-emerald-400 transition">Interactive Demo</a>
-                <a href="#cex-isolation" class="hover:text-emerald-400 transition">CEX Isolation</a>
-                <a href="#features" class="hover:text-emerald-400 transition">Features</a>
-                <a href="#faq" class="hover:text-emerald-400 transition">FAQ</a>
-            </nav>
-
-            <div class="flex items-center space-x-3">
-                <a href="/login" class="text-xs font-extrabold text-night-950 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition transform hover:-translate-y-0.5 flex items-center space-x-2">
-                    <svg class="w-4 h-4 text-night-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+            <!-- Right CTA Action Buttons -->
+            <div class="flex items-center space-x-4">
+                <a href="/login" class="text-sm font-bold text-stripe-navy hover:text-stripe-indigo transition hidden sm:inline-flex items-center space-x-1">
+                    <span>Sign in</span>
+                    <span class="text-xs">&rarr;</span>
+                </a>
+                <a href="/login" class="stripe-pill-button px-5 py-2.5 rounded-full text-xs font-extrabold text-white bg-stripe-navy hover:bg-stripe-indigo transition shadow-md flex items-center space-x-2">
                     <span>Admin Portal</span>
+                    <span>&rarr;</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- HERO SECTION (PayAdmit Dark Atmospheric Cosmic Theme) -->
-    <section class="relative pt-32 pb-20 hero-mesh grid-pattern overflow-hidden text-white">
-        <!-- Glow Orbs -->
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none"></div>
-        <div class="absolute top-1/3 right-10 w-[450px] h-[300px] bg-emerald-500/15 blur-[100px] rounded-full pointer-events-none"></div>
+    <!-- ========================================== -->
+    <!-- 2. HERO SECTION (Stripe Iconic Aurora Canvas) -->
+    <!-- ========================================== -->
+    <section class="stripe-hero-canvas relative pt-12 pb-24 lg:pt-20 lg:pb-36 border-b border-stripe-border/70">
+        <!-- Aurora Gradient Mesh -->
+        <div class="stripe-gradient-mesh"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                 
-                <!-- Left Column: High-Agency Copy & Actions -->
-                <div class="lg:col-span-7 space-y-6 text-left">
-                    <!-- Pill Badge -->
-                    <div class="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-xs font-extrabold backdrop-blur-md shadow-lg shadow-emerald-500/5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span class="tracking-wide">THE B2B ON-CHAIN SCORING GATEWAY FOR CRYPTO IGAMING</span>
+                <!-- Left: Headline & Pitch -->
+                <div class="lg:col-span-6 space-y-8 text-left">
+                    <!-- Feature Pill -->
+                    <div class="inline-flex items-center space-x-2.5 bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-full px-4 py-1.5 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-stripe-emerald animate-pulse"></span>
+                        <span class="text-xs font-bold text-stripe-navy">Enterprise Player Intelligence v2.4</span>
+                        <span class="text-slate-300">|</span>
+                        <a href="#simulator" class="text-xs font-extrabold text-stripe-indigo hover:underline flex items-center space-x-1">
+                            <span>Try Live Demo</span>
+                            <span>&rarr;</span>
+                        </a>
                     </div>
 
-                    <!-- Main Headline -->
-                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.10]">
-                        INSTANT ON-CHAIN <br>
-                        <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">VIP Player Detection</span> <br>
-                        & RISK SCORING
+                    <!-- Main Bold H1 -->
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-stripe-navy tracking-tight leading-[1.06]">
+                        Financial & player <br>
+                        <span class="bg-gradient-to-r from-stripe-indigo via-stripe-purple to-stripe-pink bg-clip-text text-transparent">
+                            intelligence for crypto gaming
+                        </span>
                     </h1>
 
-                    <!-- Lead Paragraph -->
-                    <p class="text-base sm:text-lg text-slate-300 font-normal max-w-xl leading-relaxed">
-                        Score crypto deposit wallets in under <strong>1.2 seconds</strong> across <strong>TRON</strong>, <strong>Ethereum</strong>, <strong>BNB Chain</strong>, <strong>Solana</strong>, and <strong>Bitcoin</strong>. Instantly identify high-rollers with $200k+ balance & active gambling history while isolating exchange hot wallets (Bybit, Binance).
+                    <!-- Paragraph -->
+                    <p class="text-lg sm:text-xl text-stripe-slate font-medium leading-relaxed max-w-xl">
+                        Identify VIP high-rollers instantly on deposit, detect liquid balances across 5 blockchains, and automate AML risk gates with a sub-180ms scoring API.
                     </p>
 
-                    <!-- CTAs -->
-                    <div class="flex flex-col sm:flex-row items-center gap-4 pt-3">
-                        <a href="/docs" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white text-sm font-black rounded-2xl shadow-xl shadow-indigo-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
-                            <span>Explore API Documentation</span>
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <!-- Buttons -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+                        <a href="#simulator" class="stripe-pill-button px-7 py-4 rounded-full text-sm font-extrabold text-white bg-stripe-indigo hover:bg-stripe-indigo-hover text-center shadow-lg shadow-stripe-indigo/30 transition flex items-center justify-center space-x-2">
+                            <span>Test Live Wallet Simulator</span>
+                            <span>&rarr;</span>
                         </a>
-                        <a href="#live-demo" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/20 text-white text-sm font-bold rounded-2xl backdrop-blur-md transition flex items-center justify-center space-x-2">
-                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Test Live Simulator</span>
+                        <a href="/docs" class="px-6 py-4 rounded-full text-sm font-bold text-stripe-navy bg-white hover:bg-slate-50 border border-stripe-border text-center transition shadow-sm flex items-center justify-center space-x-2">
+                            <span>Read API Docs</span>
                         </a>
                     </div>
 
-                    <!-- Micro Highlights -->
-                    <div class="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-400 font-medium">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">✓</div>
-                            <span class="text-slate-300">0–100 WPS-v1.0 Score</span>
+                    <!-- Stripe-Style Micro Metrics Bar -->
+                    <div class="pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-6">
+                        <div>
+                            <div class="text-2xl font-black text-stripe-navy font-mono">5 Chains</div>
+                            <div class="text-xs font-semibold text-stripe-muted">TRON, ETH, BSC, SOL, BTC</div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">✓</div>
-                            <span class="text-slate-300">CEX Pool Anti-Hallucination</span>
+                        <div>
+                            <div class="text-2xl font-black text-stripe-indigo font-mono">&lt;180ms</div>
+                            <div class="text-xs font-semibold text-stripe-muted">Scoring Latency</div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">✓</div>
-                            <span class="text-slate-300">Per-Client Custom Rules & Tags</span>
+                        <div>
+                            <div class="text-2xl font-black text-stripe-emerald font-mono">150k+</div>
+                            <div class="text-xs font-semibold text-stripe-muted">Attributed Clusters</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Interactive Live Dossier Card (PayAdmit Style with live preset switching) -->
-                <div class="lg:col-span-5 relative" id="hero-card-container">
-                    <div class="absolute -inset-1.5 bg-gradient-to-tr from-emerald-500 via-indigo-500 to-cyan-400 rounded-3xl blur-2xl opacity-30 animate-pulse-slow"></div>
-                    
-                    <div class="relative dark-glass-card rounded-3xl p-6 sm:p-7 space-y-5 border border-white/15 shadow-2xl">
+                <!-- Right: Stripe-Style 3D Floating Product Mockup -->
+                <div class="lg:col-span-6 relative">
+                    <!-- Glow behind card -->
+                    <div class="absolute -inset-4 bg-gradient-to-r from-stripe-indigo/20 via-stripe-pink/20 to-stripe-amber/20 rounded-[2.5rem] blur-2xl opacity-70 animate-glow"></div>
+
+                    <!-- Main Glass Dossier Card -->
+                    <div class="stripe-glass-hero rounded-3xl p-6 sm:p-7 relative z-10 space-y-6">
                         
-                        <!-- Card Top Bar: Live Status & Preset Indicator -->
-                        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                        <!-- Card Header -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                             <div class="flex items-center space-x-3">
-                                <div id="cardBadgeIcon" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center font-black text-night-950 text-sm font-mono shadow-md">
-                                    VIP
-                                </div>
-                                <div>
-                                    <div class="text-xs font-black text-white flex items-center space-x-2">
-                                        <span id="cardPlayerTitle">Live Player Intelligence</span>
-                                    </div>
-                                    <div id="cardPlayerAddress" class="text-[10px] font-mono text-slate-400">0xde0B29...7BAe (Ethereum)</div>
+                                <div class="w-3 h-3 rounded-full bg-stripe-emerald animate-pulse"></div>
+                                <span class="text-xs font-mono font-bold text-stripe-navy uppercase tracking-wider">
+                                    LIVE TRANSACTION DOSSIER
+                                </span>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                100% On-Chain Match
+                            </span>
+                        </div>
+
+                        <!-- Top Wallet Snapshot -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/90 rounded-2xl p-4 border border-slate-200/80">
+                            <div>
+                                <div class="text-[11px] font-bold uppercase text-stripe-muted tracking-wider">Target Wallet (TRON)</div>
+                                <div class="font-mono text-xs font-extrabold text-stripe-navy select-all mt-0.5">
+                                    TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <span id="cardStatusBadge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider">
-                                    SUPER_SHARK
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2.5 py-1 bg-stripe-indigo/10 text-stripe-indigo rounded-lg text-[10px] font-mono font-extrabold">TRC-20</span>
+                                <span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-lg text-[10px] font-extrabold">SUPER SHARK</span>
+                            </div>
+                        </div>
+
+                        <!-- Score & High Roller Metric Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+                            <!-- Gauge -->
+                            <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                                <span class="text-[10px] font-bold uppercase text-stripe-muted">Player Score</span>
+                                <div class="flex items-baseline space-x-1 my-1">
+                                    <span class="text-3xl font-black text-stripe-navy font-mono">98</span>
+                                    <span class="text-xs font-bold text-slate-400">/100</span>
+                                </div>
+                                <span class="text-[10px] font-extrabold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md self-start">
+                                    Top 0.1% VIP
+                                </span>
+                            </div>
+
+                            <!-- Balance -->
+                            <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                                <span class="text-[10px] font-bold uppercase text-stripe-muted">Liquid Balance</span>
+                                <div class="text-2xl font-black text-stripe-emerald font-mono my-1">$452,180</div>
+                                <span class="text-[10px] font-semibold text-slate-500">Visible on-chain</span>
+                            </div>
+
+                            <!-- 365d Gambling Flow -->
+                            <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between col-span-2 sm:col-span-1">
+                                <span class="text-[10px] font-bold uppercase text-stripe-muted">Gambling Turnover</span>
+                                <div class="text-2xl font-black text-stripe-indigo font-mono my-1">$1.48M</div>
+                                <span class="text-[10px] font-semibold text-stripe-indigo">14 Casinos active</span>
+                            </div>
+                        </div>
+
+                        <!-- Identified Clusters Chips -->
+                        <div class="space-y-2">
+                            <div class="text-[11px] font-bold uppercase text-stripe-muted tracking-wider flex items-center justify-between">
+                                <span>Verified Entity Interactions</span>
+                                <span class="text-[10px] text-stripe-indigo font-mono font-bold">Confidence: 99.8%</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-stripe-navy shadow-sm">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span>Stake.com ($420k Vol)</span>
+                                </span>
+                                <span class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-stripe-navy shadow-sm">
+                                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                    <span>Rollbit ($180k Vol)</span>
+                                </span>
+                                <span class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-stripe-navy shadow-sm">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                    <span>Binance VIP Desk</span>
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Score Gauge Display -->
-                        <div class="flex items-center justify-between bg-night-900/90 rounded-2xl p-4 border border-white/5">
-                            <div>
-                                <div class="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">Scoring Engine Output</div>
-                                <div id="cardScoreTier" class="text-lg font-black text-amber-400 mt-0.5">VIP Tier 5 (Whale)</div>
-                                <div id="cardConfidence" class="text-[10px] text-slate-400">Confidence: 98% • Latency: 0.94s</div>
+                        <!-- Automated Decision Strip -->
+                        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-2.5">
+                                <div class="w-7 h-7 rounded-xl bg-stripe-emerald text-white flex items-center justify-center font-bold text-xs">✓</div>
+                                <div>
+                                    <div class="text-xs font-extrabold text-emerald-950">Decision: Auto-Approve & Fast Track</div>
+                                    <div class="text-[10px] text-emerald-800">Trigger VIP Welcome Pack & Alert Telegram Host</div>
+                                </div>
                             </div>
-                            <div id="cardScoreBox" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex flex-col items-center justify-center text-night-950 font-black shadow-lg">
-                                <span id="cardScoreNumber" class="text-2xl leading-none">94</span>
-                                <span class="text-[8px] uppercase tracking-wider opacity-80">/ 100</span>
-                            </div>
+                            <span class="text-[10px] font-mono font-bold text-emerald-700 bg-white/80 px-2 py-1 rounded-lg">114ms</span>
                         </div>
+                    </div>
 
-                        <!-- 2-Column Metrics Grid -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-night-900/80 border border-white/5 rounded-2xl p-3.5 space-y-1">
-                                <span class="text-[10px] font-bold uppercase text-slate-400">Liquid Balance</span>
-                                <div id="cardBalanceUsd" class="text-lg font-black text-white font-mono">$24,864,346</div>
-                                <div id="cardBalanceTokens" class="text-[10px] text-emerald-400 font-bold truncate">6,774.49 ETH + USDT</div>
-                            </div>
-                            <div class="bg-night-900/80 border border-white/5 rounded-2xl p-3.5 space-y-1">
-                                <span class="text-[10px] font-bold uppercase text-slate-400">Gambling Flow (365d)</span>
-                                <div id="cardGamblingFlow" class="text-lg font-black text-indigo-300 font-mono">$1,820,000</div>
-                                <div id="cardGamblingBrands" class="text-[10px] text-indigo-400 font-bold truncate">Stake.com, Rollbit</div>
-                            </div>
+                    <!-- Floating Badge 1 (Top-Right): AML Risk Low -->
+                    <div class="hidden sm:flex absolute -top-6 -right-6 bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xl items-center space-x-3 z-20 animate-float">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                            🛡️
                         </div>
-
-                        <!-- Assigned Custom Tags -->
-                        <div class="space-y-1.5">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-bold uppercase text-slate-400">Assigned Tags & Key Drivers</span>
-                                <span class="text-[9px] text-slate-500 font-mono">Custom Rules Applied</span>
-                            </div>
-                            <div id="cardTagsContainer" class="flex flex-wrap gap-1.5">
-                                <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black">#SUPER_SHARK</span>
-                                <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">#WHALE_LIQUIDITY_GT_400K</span>
-                                <span class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-bold">#STAKE_VETERAN</span>
-                            </div>
+                        <div>
+                            <div class="text-[10px] font-bold uppercase text-slate-400">AML Risk Score</div>
+                            <div class="text-xs font-extrabold text-stripe-navy">Clean 0 / 100 • 0% Mixer</div>
                         </div>
+                    </div>
 
-                        <!-- Instant Action Banner -->
-                        <div id="cardBottomBanner" class="bg-gradient-to-r from-indigo-950/80 via-night-900 to-emerald-950/80 rounded-xl p-3 border border-indigo-500/30 flex items-center justify-between text-xs">
-                            <div class="flex items-center space-x-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                                <span id="cardBottomText" class="font-bold text-white">VIP Host Auto-Assigned in CRM</span>
-                            </div>
-                            <span class="font-mono text-[11px] text-emerald-300 font-bold">&lt; 1.2s</span>
+                    <!-- Floating Badge 2 (Bottom-Left): Webhook Dispatch -->
+                    <div class="hidden sm:flex absolute -bottom-6 -left-6 bg-stripe-navy text-white border border-slate-700 rounded-2xl p-3.5 shadow-2xl items-center space-x-3 z-20 animate-float-rev">
+                        <div class="w-9 h-9 rounded-xl bg-stripe-indigo text-white flex items-center justify-center font-bold text-xs">
+                            ⚡
                         </div>
-
+                        <div>
+                            <div class="text-[10px] font-bold uppercase text-slate-400 font-mono">Webhook Dispatched</div>
+                            <div class="text-xs font-mono font-bold text-stripe-cyan">event: "player.scored.vip"</div>
+                        </div>
                     </div>
                 </div>
 
@@ -293,927 +393,668 @@
         </div>
     </section>
 
-    <!-- 5-CHAIN LIVE NETWORK TICKER (PayAdmit Style) -->
-    <div class="bg-night-900 border-y border-white/10 py-5 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center space-x-2 text-xs font-black uppercase tracking-wider text-slate-400">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 glow-dot"></span>
-                    <span>Supported Layer-1 & Token Ecosystems:</span>
+    <!-- ========================================== -->
+    <!-- 3. BRAND & CLUSTER ATTRIBUTION TICKER     -->
+    <!-- ========================================== -->
+    <section class="py-10 bg-stripe-light border-b border-stripe-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <p class="text-xs font-extrabold uppercase tracking-widest text-slate-400">
+                PROVEN CLUSTER ATTRIBUTION & TRANSACTION PARSING ACROSS ECOSYSTEMS
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-70 hover:opacity-100 transition-opacity">
+                <!-- Blockchain Badges -->
+                <div class="flex items-center space-x-2 text-sm font-extrabold text-stripe-navy font-mono">
+                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                    <span>TRON (TRC20)</span>
                 </div>
-                <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-300">
-                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-red-500/40 transition">
-                        <span class="text-red-400 font-mono">TRON</span>
-                        <span class="text-[10px] text-slate-400">USDT (TRC-20), TRX</span>
-                    </div>
-                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-500/40 transition">
-                        <span class="text-indigo-400 font-mono">ETH</span>
-                        <span class="text-[10px] text-slate-400">ERC-20, ETH</span>
-                    </div>
-                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/40 transition">
-                        <span class="text-amber-400 font-mono">BNB</span>
-                        <span class="text-[10px] text-slate-400">BEP-20, BNB</span>
-                    </div>
-                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/40 transition">
-                        <span class="text-purple-400 font-mono">SOL</span>
-                        <span class="text-[10px] text-slate-400">SPL USDT, SOL</span>
-                    </div>
-                    <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-orange-500/40 transition">
-                        <span class="text-orange-400 font-mono">BTC</span>
-                        <span class="text-[10px] text-slate-400">UTXO Native</span>
-                    </div>
+                <div class="flex items-center space-x-2 text-sm font-extrabold text-stripe-navy font-mono">
+                    <span class="w-3 h-3 rounded-full bg-indigo-600"></span>
+                    <span>Ethereum (ERC20)</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- HORIZONTAL METRICS BAR (PayAdmit Style) -->
-    <div class="bg-night-950 border-b border-white/10 py-8 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="space-y-1 border-r border-white/10 last:border-none">
-                    <div class="text-3xl sm:text-4xl font-black font-mono bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">$3.8B+</div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">On-Chain Volume Processed</div>
+                <div class="flex items-center space-x-2 text-sm font-extrabold text-stripe-navy font-mono">
+                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                    <span>BNB Chain (BEP20)</span>
                 </div>
-                <div class="space-y-1 border-r border-white/10 last:border-none">
-                    <div class="text-3xl sm:text-4xl font-black font-mono text-white">99.8%</div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">CEX Attribution Accuracy</div>
+                <div class="flex items-center space-x-2 text-sm font-extrabold text-stripe-navy font-mono">
+                    <span class="w-3 h-3 rounded-full bg-teal-500"></span>
+                    <span>Solana (SPL)</span>
                 </div>
-                <div class="space-y-1 border-r border-white/10 last:border-none">
-                    <div class="text-3xl sm:text-4xl font-black font-mono text-indigo-400">5 Chains</div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">TRON, ETH, BSC, SOL, BTC</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-3xl sm:text-4xl font-black font-mono text-amber-400">&lt; 1.2 sec</div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Average Scoring Latency</div>
+                <div class="flex items-center space-x-2 text-sm font-extrabold text-stripe-navy font-mono">
+                    <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                    <span>Bitcoin (BTC)</span>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- MAIN BODY SECTIONS (Clean Light Theme Transition) -->
-    <div class="bg-slate-50 text-slate-900 flex-1">
-
-        <!-- INTERACTIVE LIVE SIMULATOR DEMO SECTION -->
-        <section id="live-demo" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3 mb-10">
-                <span class="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3.5 py-1 rounded-full border border-indigo-200">Interactive Simulator</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Try Real-Time Wallet Dossier Inspection</h2>
-                <p class="text-sm sm:text-base text-slate-600">
-                    Click any player archetype below to see how On-Score calculates balances, checks gambling footprints, and applies custom casino tags in real time.
+    <!-- ========================================== -->
+    <!-- 4. PRODUCT BENTO GRID (Stripe Style)       -->
+    <!-- ========================================== -->
+    <section id="features" class="py-24 lg:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            <!-- Section Header -->
+            <div class="max-w-3xl space-y-4">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-stripe-indigo">
+                    MODULAR INTELLIGENCE ENGINE
+                </span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-stripe-navy tracking-tight leading-tight">
+                    Everything you need to evaluate, retain, and protect crypto players.
+                </h2>
+                <p class="text-base sm:text-lg text-stripe-slate">
+                    Designed for high-load iGaming platforms, payment gateways, and Web3 sportsbooks handling thousands of real-time crypto deposits.
                 </p>
-
-                <!-- Archetype Selector Tabs -->
-                <div class="flex flex-wrap items-center justify-center gap-2.5 pt-4">
-                    <button onclick="setSimulationPreset('whale_eth')" id="simBtn-whale_eth" class="px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-slate-900 text-white border-slate-900 shadow-md flex items-center space-x-2">
-                        <span>🐋</span>
-                        <span>High-Roller Shark (ETH)</span>
-                    </button>
-                    <button onclick="setSimulationPreset('tron_gambler')" id="simBtn-tron_gambler" class="px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-2">
-                        <span>⚡</span>
-                        <span>Active Gambler (TRON)</span>
-                    </button>
-                    <button onclick="setSimulationPreset('bybit_cex')" id="simBtn-bybit_cex" class="px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-2">
-                        <span>🛡️</span>
-                        <span>Exchange Hot Pool (Bybit)</span>
-                    </button>
-                    <button onclick="setSimulationPreset('casual_sol')" id="simBtn-casual_sol" class="px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-2">
-                        <span>💤</span>
-                        <span>Casual Wallet (Solana)</span>
-                    </button>
-                </div>
             </div>
 
-            <!-- Simulator Interactive Container -->
-            <div class="max-w-5xl mx-auto gradient-border-card p-6 sm:p-10 shadow-xl">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    
-                    <!-- Left Breakdown Info -->
-                    <div class="lg:col-span-6 space-y-4 text-left">
+            <!-- Bento Matrix Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                
+                <!-- Tile 1: High Roller & VIP Discovery (Wide: 7 cols) -->
+                <div class="md:col-span-7 stripe-card p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden group">
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center font-black text-xl">
+                            🐋
+                        </div>
+                        <h3 class="text-2xl font-black text-stripe-navy">
+                            Instant VIP Shark & Whale Detection
+                        </h3>
+                        <p class="text-sm text-stripe-slate leading-relaxed max-w-lg">
+                            Evaluate total liquid wealth across multiple blockchains on the player's very first deposit. Uncover off-site liquidity in other wallets and trigger immediate VIP onboarding.
+                        </p>
+                    </div>
+
+                    <!-- Visual Mockup inside tile -->
+                    <div class="mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="text-slate-500 font-bold">Liquid Balance Multi-Chain:</span>
+                            <span class="text-purple-700 font-extrabold">$480,000 USD (ETH + TRON)</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden flex">
+                            <div class="bg-indigo-600 h-3" style="width: 55%"></div>
+                            <div class="bg-rose-500 h-3" style="width: 35%"></div>
+                            <div class="bg-amber-500 h-3" style="width: 10%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                            <span>ERC20 ($264k)</span>
+                            <span>TRC20 ($168k)</span>
+                            <span>BEP20 ($48k)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tile 2: 150k+ Clustered Entities (5 cols) -->
+                <div class="md:col-span-5 stripe-card p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 text-stripe-indigo flex items-center justify-center font-black text-xl">
+                            🎰
+                        </div>
+                        <h3 class="text-2xl font-black text-stripe-navy">
+                            150k+ Casino & CEX Clusters
+                        </h3>
+                        <p class="text-sm text-stripe-slate leading-relaxed">
+                            Continuous on-chain graph analysis identifying interactions with Stake.com, Rollbit, BC.Game, Roobet, 1xBet, Binance, and OKX.
+                        </p>
+                    </div>
+
+                    <!-- Flow Chip Mockup -->
+                    <div class="mt-6 space-y-2 font-mono text-xs">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                            <span class="text-slate-700 font-bold">Stake.com Deposit Router</span>
+                            <span class="text-emerald-600 font-extrabold">Attributed</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                            <span class="text-slate-700 font-bold">Rollbit Casino Vault</span>
+                            <span class="text-emerald-600 font-extrabold">Attributed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tile 3: Automated Risk & AML Policy Engine (5 cols) -->
+                <div class="md:col-span-5 stripe-card p-8 sm:p-10 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center font-black text-xl">
+                            🛡️
+                        </div>
+                        <h3 class="text-2xl font-black text-stripe-navy">
+                            AML Risk & Policy Rules
+                        </h3>
+                        <p class="text-sm text-stripe-slate leading-relaxed">
+                            Detect sanctioned entities, Tornado Cash, darknet market hops, and multi-accounting bonus hunters in milliseconds before granting withdrawals.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 bg-slate-900 text-white rounded-2xl p-4 font-mono text-xs space-y-1.5">
+                        <div class="text-slate-400">// Rule Execution Engine</div>
+                        <div>IF <span class="text-yellow-300">mixer_exposure &gt; 0</span> &rarr; <span class="text-rose-400">FLAG_HIGH_RISK</span></div>
+                        <div>IF <span class="text-yellow-300">turnover &gt; $100k</span> &rarr; <span class="text-emerald-400">SET_SUPER_VIP</span></div>
+                    </div>
+                </div>
+
+                <!-- Tile 4: Unified Multi-Chain DTO (7 cols) -->
+                <div class="md:col-span-7 stripe-card p-8 sm:p-10 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center font-black text-xl">
+                            ⚡
+                        </div>
+                        <h3 class="text-2xl font-black text-stripe-navy">
+                            Unified Scoring JSON Schema
+                        </h3>
+                        <p class="text-sm text-stripe-slate leading-relaxed max-w-lg">
+                            One normalized API response format regardless of whether the player deposits in TRON TRC-20, Ethereum ERC-20, Solana SPL, or Bitcoin Taproot.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-4 font-mono text-xs text-slate-700 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">score.value</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">score.segment</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">financial_profile.visible_balance_usd</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">gambling_intelligence.entities_count</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 5. INTERACTIVE LIVE WALLET SIMULATOR       -->
+    <!-- ========================================== -->
+    <section id="simulator" class="py-24 bg-stripe-light border-y border-stripe-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-stripe-indigo">
+                    TEST IT IN REAL TIME
+                </span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-stripe-navy tracking-tight">
+                    Live Crypto Scoring Simulator
+                </h2>
+                <p class="text-base text-stripe-slate">
+                    Pick one of the live test profiles below or paste any address to see real-time player scoring and dossier generation.
+                </p>
+            </div>
+
+            <!-- Simulator UI Component -->
+            <div class="bg-white rounded-3xl border border-stripe-border shadow-xl p-6 sm:p-10 space-y-8 max-w-5xl mx-auto">
+                
+                <!-- Preset Pickers -->
+                <div class="space-y-3">
+                    <label class="block text-xs font-extrabold uppercase text-stripe-muted tracking-wider">
+                        1. Select a Preset Wallet Profile:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button type="button" onclick="selectPreset('vip')" id="btnPreset-vip" class="p-3.5 rounded-2xl border-2 border-stripe-indigo bg-stripe-indigo/5 text-left transition hover:scale-[1.02]">
+                            <div class="text-xs font-bold text-stripe-indigo font-mono">ETH (ERC20)</div>
+                            <div class="text-sm font-black text-stripe-navy mt-1">🐋 VIP Whale</div>
+                            <div class="text-[11px] text-slate-500 mt-0.5">$480k+ Liquid</div>
+                        </button>
+
+                        <button type="button" onclick="selectPreset('casino')" id="btnPreset-casino" class="p-3.5 rounded-2xl border border-slate-200 bg-white text-left transition hover:border-stripe-indigo hover:scale-[1.02]">
+                            <div class="text-xs font-bold text-rose-600 font-mono">TRON (TRC20)</div>
+                            <div class="text-sm font-black text-stripe-navy mt-1">🎰 Stake Player</div>
+                            <div class="text-[11px] text-slate-500 mt-0.5">$180k Turnover</div>
+                        </button>
+
+                        <button type="button" onclick="selectPreset('hunter')" id="btnPreset-hunter" class="p-3.5 rounded-2xl border border-slate-200 bg-white text-left transition hover:border-stripe-indigo hover:scale-[1.02]">
+                            <div class="text-xs font-bold text-amber-600 font-mono">BSC (BEP20)</div>
+                            <div class="text-sm font-black text-stripe-navy mt-1">🎯 Bonus Hunter</div>
+                            <div class="text-[11px] text-slate-500 mt-0.5">Rapid Micro Sweeps</div>
+                        </button>
+
+                        <button type="button" onclick="selectPreset('aml')" id="btnPreset-aml" class="p-3.5 rounded-2xl border border-slate-200 bg-white text-left transition hover:border-stripe-indigo hover:scale-[1.02]">
+                            <div class="text-xs font-bold text-slate-700 font-mono">ETH (Mixer)</div>
+                            <div class="text-sm font-black text-stripe-navy mt-1">🚨 Sanctioned / AML</div>
+                            <div class="text-[11px] text-slate-500 mt-0.5">Tornado Direct Hop</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Form Bar -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                    <div class="md:col-span-3">
+                        <label class="block text-xs font-bold uppercase text-stripe-muted mb-1">Network</label>
+                        <select id="simNetwork" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-stripe-navy focus:border-stripe-indigo focus:bg-white focus:outline-none">
+                            <option value="ethereum">Ethereum (ETH)</option>
+                            <option value="tron">TRON (TRC20)</option>
+                            <option value="bsc">BNB Chain (BSC)</option>
+                            <option value="solana">Solana (SOL)</option>
+                            <option value="bitcoin">Bitcoin (BTC)</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-6">
+                        <label class="block text-xs font-bold uppercase text-stripe-muted mb-1">Wallet Address</label>
+                        <input type="text" id="simAddress" value="0x28c6c06298d514db089934071355e5743bf21d60" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs sm:text-sm font-mono font-bold text-stripe-navy focus:border-stripe-indigo focus:bg-white focus:outline-none">
+                    </div>
+
+                    <div class="md:col-span-3 flex items-end">
+                        <button type="button" onclick="runSimulation()" id="simRunBtn" class="stripe-pill-button w-full bg-stripe-navy hover:bg-stripe-indigo text-white font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                            <span>Score Wallet</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Simulation Output Panel -->
+                <div id="simResultBox" class="border border-slate-200 rounded-2xl p-6 bg-slate-50 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-3 h-3 rounded-full bg-stripe-emerald animate-pulse"></span>
+                            <span class="text-xs font-mono font-bold text-stripe-navy uppercase">ANALYSIS RESULT #01m22vd...</span>
+                        </div>
                         <div class="flex items-center space-x-2">
-                            <span id="simArchetypeBadge" class="px-3 py-1 rounded-lg bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
-                                🐋 High-Roller Shark Profile
+                            <span id="simTagBadge" class="px-3 py-1 bg-purple-100 text-purple-800 border border-purple-300 rounded-full text-xs font-black">
+                                SUPER_VIP_SHARK
                             </span>
-                            <span id="simNetworkBadge" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono font-bold">
-                                Ethereum Mainnet
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+                                142ms
                             </span>
                         </div>
-                        <h3 id="simHeadline" class="text-2xl font-black text-slate-900">
-                            High-Net-Worth VIP Detected ($24.8M)
-                        </h3>
-                        <p id="simDescription" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                            This wallet holds massive liquid ETH and stablecoin balances, with a proven history of 7-figure wagers on Stake and Rollbit. On-Score flags this player as <strong class="text-indigo-600 font-bold">SUPER_SHARK</strong> and assigns top VIP priority.
-                        </p>
+                    </div>
 
-                        <div class="space-y-2 pt-2 text-xs">
-                            <div class="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
-                                <div class="font-extrabold text-slate-800 flex justify-between">
-                                    <span>Casino Action Recommendation:</span>
-                                    <span id="simActionRec" class="text-emerald-700 font-black">Assign Dedicated VIP Manager</span>
-                                </div>
-                                <div id="simActionDetail" class="text-slate-600">
-                                    Trigger custom high-roller retention flow, raise deposit limits, and enable 1-on-1 VIP concierge support.
-                                </div>
+                    <!-- Metrics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Risk / VIP Score</div>
+                            <div id="simScoreVal" class="text-2xl sm:text-3xl font-black text-stripe-navy font-mono mt-1">98 / 100</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Visible Balance</div>
+                            <div id="simBalanceVal" class="text-2xl sm:text-3xl font-black text-stripe-emerald font-mono mt-1">$482,500</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Gambling Turnover</div>
+                            <div id="simFlowVal" class="text-2xl sm:text-3xl font-black text-stripe-indigo font-mono mt-1">$1.42M</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">Decision Action</div>
+                            <div id="simDecisionVal" class="text-xs font-black text-emerald-700 font-mono mt-2 bg-emerald-50 px-2 py-1 rounded inline-block">
+                                AUTO_APPROVE
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Live Simulated JSON Snapshot -->
-                    <div class="lg:col-span-6 bg-night-950 rounded-2xl p-5 sm:p-6 text-white font-mono text-xs space-y-3 shadow-2xl border border-slate-800">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 text-slate-400">
-                            <span class="flex items-center space-x-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                <span class="font-bold text-white">Live Engine Response</span>
-                            </span>
-                            <span id="simEngineTag" class="text-emerald-400 font-bold text-[10px]">WPS-v1.0 (PROD)</span>
+                    <!-- Raw JSON preview toggle -->
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-bold text-stripe-muted uppercase mb-2">
+                            <span>Structured JSON Response</span>
+                            <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('simJsonCode').innerText); alert('JSON copied to clipboard!');" class="text-stripe-indigo hover:underline font-bold">
+                                Copy JSON
+                            </button>
                         </div>
-                        
-                        <pre id="simJsonSnippet" class="text-slate-200 overflow-x-auto max-h-[280px] leading-relaxed text-[11px]">{
+                        <pre id="simJsonCode" class="bg-slate-900 text-slate-200 rounded-xl p-4 font-mono text-xs overflow-x-auto max-h-64 shadow-inner">{
+  "analysis_id": "01m22vdmk7j2c1jg9kgekbf3zd",
   "status": "completed",
+  "network": "ethereum",
+  "address": "0x28c6c06298d514db089934071355e5743bf21d60",
   "score": {
-    "value": 94,
+    "value": 98,
     "segment": "super_vip",
-    "custom_tags": ["SUPER_SHARK", "HIGH_ROLLER_VIP"]
+    "custom_tags": ["SUPER_SHARK", "HIGH_LIQUIDITY_WHALE"],
+    "recommendation": "auto_approve"
   },
-  "wallet": {
-    "visible_balance_usd": 24864346.00,
-    "is_custodial_cex": false
+  "financial_profile": {
+    "visible_balance_usd": 482500,
+    "primary_assets": {"ETH": 142.5, "USDT": 150000}
   },
-  "gambling": {
-    "status": "detected",
-    "total_flow_365d_usd": 1820000.00,
-    "entities_list": ["Stake.com", "Rollbit"]
+  "gambling_intelligence": {
+    "is_gambler": true,
+    "entities_count": 8,
+    "total_flow_365d_usd": 1420000
   }
 }</pre>
                     </div>
-
                 </div>
+
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- 3-STEP PIPELINE: HOW IT WORKS (PayAdmit Style) -->
-        <section id="how-it-works" class="py-20 bg-white border-y border-slate-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto space-y-3 mb-16">
-                    <span class="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">3-Step Pipeline</span>
-                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">How On-Score Analyzes Players in Real Time</h2>
-                    <p class="text-sm sm:text-base text-slate-600">
-                        Zero friction for players. Zero guesswork for VIP & Risk teams.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                    
-                    <!-- Step 1 -->
-                    <div class="gradient-border-card p-8 space-y-4 text-left relative">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center font-black text-xl">
-                            01
-                        </div>
-                        <h4 class="text-xl font-black text-slate-900">Player Initiates Crypto Deposit</h4>
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                            When a user sends USDT, TRX, ETH, BNB, SOL, or BTC to your cashier, your backend immediately notifies On-Score with the wallet address.
-                        </p>
-                        <div class="pt-2 flex items-center space-x-2 text-[11px] font-mono text-indigo-600 font-bold">
-                            <span>POST /api/v1/analyses</span>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="gradient-border-card p-8 space-y-4 text-left relative">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center font-black text-xl">
-                            02
-                        </div>
-                        <h4 class="text-xl font-black text-slate-900">Sub-1.2s Heuristic Scoring</h4>
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                            Our engine scans verified nodes, calculates liquid token balances, verifies exchange sweepers, and indexes interactions with known casino contracts.
-                        </p>
-                        <div class="pt-2 flex items-center space-x-2 text-[11px] font-mono text-emerald-600 font-bold">
-                            <span>4-Pillar Model WPS-v1.0</span>
-                        </div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="gradient-border-card p-8 space-y-4 text-left relative">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center font-black text-xl">
-                            03
-                        </div>
-                        <h4 class="text-xl font-black text-slate-900">Instant VIP Routing & Custom Tags</h4>
-                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                            Your CRM or cashier receives the completed dossier with custom client tags (e.g. <code>#SUPER_SHARK</code>) to trigger immediate personalized VIP perks.
-                        </p>
-                        <div class="pt-2 flex items-center space-x-2 text-[11px] font-mono text-amber-600 font-bold">
-                            <span>Webhook & CRM Dispatch</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- CEX ISOLATION & SCORING PILLARS (Interactive Tabs) -->
-        <section id="cex-isolation" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3 mb-16">
-                <span class="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3.5 py-1 rounded-full border border-indigo-200">Architecture Deep-Dive</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Core Engine Capabilities</h2>
-                <p class="text-sm sm:text-base text-slate-600">
-                    Switch between modules to explore how raw blockchain data transforms into actionable intelligence.
+    <!-- ========================================== -->
+    <!-- 6. DEVELOPER-FIRST SECTION (Dark Terminal)  -->
+    <!-- ========================================== -->
+    <section id="developers" class="py-24 bg-stripe-darkbg text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            <div class="max-w-3xl space-y-4">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-stripe-cyan">
+                    ENGINEERED FOR DEVELOPERS
+                </span>
+                <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                    Integrate in minutes with standard REST APIs and client SDKs.
+                </h2>
+                <p class="text-base sm:text-lg text-slate-400">
+                    Authenticate via Bearer API keys or standard HMAC headers. Fully compatible with Postman, OpenAPI 3.0, and automated CI/CD webhooks.
                 </p>
-
-                <!-- Interactive Tab Switcher -->
-                <div class="flex flex-wrap items-center justify-center gap-2 pt-6">
-                    <button onclick="switchTab('scoring')" id="tabBtn-scoring" class="px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-slate-900 text-white border-slate-900 shadow-md">
-                        01. 0–100 Player Scoring
-                    </button>
-                    <button onclick="switchTab('cex')" id="tabBtn-cex" class="px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100">
-                        02. CEX Pool Isolation
-                    </button>
-                    <button onclick="switchTab('gambling')" id="tabBtn-gambling" class="px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100">
-                        03. Gambling Footprint
-                    </button>
-                    <button onclick="switchTab('rules')" id="tabBtn-rules" class="px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100">
-                        04. Custom Client Rules
-                    </button>
-                </div>
             </div>
 
-            <!-- TAB CONTENT CONTAINER -->
-            <div class="max-w-5xl mx-auto">
-                
-                <!-- Tab 1: Scoring -->
-                <div id="tabContent-scoring" class="gradient-border-card p-8 sm:p-12">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        <div class="lg:col-span-6 space-y-4 text-left">
-                            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-black">
-                                <span>Model WPS-v1.0</span>
-                            </div>
-                            <h3 class="text-2xl sm:text-3xl font-black text-slate-900">Deterministic 4-Pillar Score</h3>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                When a user deposits 100 USDT, On-Score computes an instant 0–100 score weighted across 4 critical on-chain vectors:
-                            </p>
-                            <ul class="space-y-2 text-xs text-slate-700 font-semibold">
-                                <li class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span>Financial Capacity (35%): Verified liquid tokens & turnover.</span></li>
-                                <li class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-indigo-600"></span><span>Gambling Activity (35%): Active casino smart contract interactions.</span></li>
-                                <li class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-amber-600"></span><span>Activity Recency (15%): Bets/transfers in last 48h / 7d.</span></li>
-                                <li class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-purple-600"></span><span>Transaction Profile (15%): Average deposit velocity & tx count.</span></li>
-                            </ul>
-                        </div>
-                        <div class="lg:col-span-6 bg-slate-900 rounded-2xl p-6 text-white font-mono text-xs space-y-3 shadow-xl">
-                            <div class="flex justify-between border-b border-slate-800 pb-2 text-slate-400">
-                                <span>Scoring Breakdown</span>
-                                <span class="text-emerald-400 font-bold">WPS-v1.0</span>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex justify-between"><span>Financial Capacity (35%):</span> <span class="text-emerald-400 font-bold">100 / 100</span></div>
-                                <div class="flex justify-between"><span>Gambling Activity (35%):</span> <span class="text-indigo-400 font-bold">96 / 100</span></div>
-                                <div class="flex justify-between"><span>Activity Recency (15%):</span> <span class="text-amber-400 font-bold">100 / 100</span></div>
-                                <div class="flex justify-between"><span>Transaction Profile (15%):</span> <span class="text-purple-400 font-bold">88 / 100</span></div>
-                                <div class="pt-2 border-t border-slate-800 flex justify-between font-bold text-sm">
-                                    <span class="text-white">Aggregate Score:</span>
-                                    <span class="text-amber-400">94 (SUPER_SHARK)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab 2: CEX Isolation -->
-                <div id="tabContent-cex" class="gradient-border-card p-8 sm:p-12 hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        <div class="lg:col-span-6 space-y-4 text-left">
-                            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-rose-50 text-rose-800 text-xs font-black">
-                                <span>Anti-Hallucination</span>
-                            </div>
-                            <h3 class="text-2xl sm:text-3xl font-black text-slate-900">Zero Exchange Pool False Positives</h3>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                Standard crypto tools see Bybit or Binance hot wallets ($85M balance) and mistakenly label any depositor as an ultra-whale.
-                            </p>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                On-Score’s <strong>Known Entities Database</strong> recognizes exchange pools, zeros out collective balances (<code class="text-rose-600 font-bold">visible_assets: $0.00</code>), and prevents false VIP perks for non-custodial exchange users.
-                            </p>
-                        </div>
-                        <div class="lg:col-span-6 bg-slate-900 rounded-2xl p-6 text-white font-mono text-xs space-y-3 shadow-xl border border-rose-900/40">
-                            <div class="flex justify-between border-b border-slate-800 pb-2 text-rose-400 font-bold">
-                                <span>CEX Attribution Layer</span>
-                                <span>[CUSTODIAL_POOL]</span>
-                            </div>
-                            <div class="space-y-1.5 text-slate-300">
-                                <div><span class="text-slate-500">Address:</span> TLyqzVGLV1srkB7dToTAnYg9auqwTmTX71</div>
-                                <div><span class="text-slate-500">Entity:</span> <strong class="text-white">Bybit Hot Wallet 1</strong></div>
-                                <div><span class="text-slate-500">Is Custodial CEX:</span> <span class="text-rose-400 font-bold">true</span></div>
-                                <div><span class="text-slate-500">Raw Address Balance:</span> $85,000,000 USD</div>
-                                <div><span class="text-slate-500">Adjusted Visible Assets:</span> <span class="text-amber-400 font-bold">$0.00 USD</span></div>
-                                <div><span class="text-slate-500">Assigned Score:</span> <span class="text-slate-400 font-bold">0 / 100 (Non-Individual)</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab 3: Gambling Footprint -->
-                <div id="tabContent-gambling" class="gradient-border-card p-8 sm:p-12 hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        <div class="lg:col-span-6 space-y-4 text-left">
-                            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-indigo-50 text-indigo-800 text-xs font-black">
-                                <span>Cross-Brand Intelligence</span>
-                            </div>
-                            <h3 class="text-2xl sm:text-3xl font-black text-slate-900">Historical Casino Turnover Discovery</h3>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                On-Score indexes deposit routers and hot wallets for <strong>Stake.com, Rollbit, BC.Game, Roobet, 1xBet</strong> and other top operators.
-                            </p>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                You immediately know if a player deposits $50,000/month on competitor platforms, what games they gravitate towards, and their cashout habits.
-                            </p>
-                        </div>
-                        <div class="lg:col-span-6 bg-slate-900 rounded-2xl p-6 text-white font-mono text-xs space-y-3 shadow-xl">
-                            <div class="flex justify-between border-b border-slate-800 pb-2 text-indigo-400 font-bold">
-                                <span>Gambling Intelligence Snapshot</span>
-                                <span>[ACTIVE_CASINO_USER]</span>
-                            </div>
-                            <div class="space-y-1.5 text-slate-300">
-                                <div><span class="text-slate-500">Status:</span> <span class="text-emerald-400 font-bold">detected</span></div>
-                                <div><span class="text-slate-500">Known Brands:</span> <span class="text-white font-bold">["Stake.com", "Rollbit"]</span></div>
-                                <div><span class="text-slate-500">Outgoing Deposits (365d):</span> <span class="text-white font-bold">$1,250,000.00</span></div>
-                                <div><span class="text-slate-500">Incoming Cashouts (365d):</span> <span class="text-white font-bold">$570,000.00</span></div>
-                                <div><span class="text-slate-500">Last Gambling Activity:</span> <span class="text-emerald-400 font-bold">4 hours ago</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab 4: Custom Rules -->
-                <div id="tabContent-rules" class="gradient-border-card p-8 sm:p-12 hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                        <div class="lg:col-span-6 space-y-4 text-left">
-                            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-amber-50 text-amber-800 text-xs font-black">
-                                <span>Per-Client Customization</span>
-                            </div>
-                            <h3 class="text-2xl sm:text-3xl font-black text-slate-900">Custom Thresholds & VIP Tags</h3>
-                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                Every casino has its own VIP tiers. On-Score lets you configure custom thresholds and tags in the Admin Panel:
-                            </p>
-                            <div class="space-y-1.5 text-xs font-semibold text-slate-700">
-                                <div>• If <code class="text-indigo-600 font-bold">visible_balance &gt;= $200,000</code> &rarr; tag <strong>SUPER_SHARK</strong>.</div>
-                                <div>• If <code class="text-indigo-600 font-bold">gambling_flow &gt;= $50,000</code> &rarr; tag <strong>HIGH_ROLLER_GAMBLER</strong>.</div>
-                                <div>• Custom overrides directly propagate to your CRM via webhooks and REST API.</div>
-                            </div>
-                        </div>
-                        <div class="lg:col-span-6 bg-slate-900 rounded-2xl p-6 text-white font-mono text-xs space-y-3 shadow-xl">
-                            <div class="flex justify-between border-b border-slate-800 pb-2 text-amber-400 font-bold">
-                                <span>Admin Rule Config</span>
-                                <span>[CLIENT_CUSTOMIZED]</span>
-                            </div>
-                            <pre class="text-slate-300 overflow-x-auto">{
-  <span class="syn-key">"super_vip_threshold_usd"</span>: <span class="syn-num">200000</span>,
-  <span class="syn-key">"custom_rules"</span>: [
-    {
-      <span class="syn-key">"metric"</span>: <span class="syn-str">"visible_balance_usd"</span>,
-      <span class="syn-key">"operator"</span>: <span class="syn-str">"&gt;="</span>,
-      <span class="syn-key">"value"</span>: <span class="syn-num">200000</span>,
-      <span class="syn-key">"tag"</span>: <span class="syn-str">"SUPER_SHARK"</span>,
-      <span class="syn-key">"tier"</span>: <span class="syn-str">"super_vip"</span>
-    }
-  ]
-}</pre>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- LIVE JSON & SDK SHOWCASE SECTION (PayAdmit Style) -->
-        <section id="json-preview" class="py-24 bg-night-950 text-white relative border-t border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
-                    <span class="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30">Developer Integration</span>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">Standardized JSON API Response</h2>
-                    <p class="text-sm text-slate-400">
-                        One simple REST call returns the entire on-chain dossier ready for automated CRM & VIP routing.
-                    </p>
-
-                    <!-- Code Language Selector -->
-                    <div class="flex flex-wrap items-center justify-center gap-2 pt-4">
-                        <button onclick="switchCodeTab('json')" id="codeBtn-json" class="px-4 py-2 rounded-xl text-xs font-extrabold transition bg-indigo-600 text-white shadow-md">
-                            JSON Response (201 Created)
-                        </button>
-                        <button onclick="switchCodeTab('curl')" id="codeBtn-curl" class="px-4 py-2 rounded-xl text-xs font-extrabold transition bg-slate-800 text-slate-300 hover:bg-slate-700">
+            <!-- Interactive Code Terminal -->
+            <div class="bg-[#0b1727] border border-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+                <!-- Tab Headers -->
+                <div class="flex items-center justify-between px-6 py-4 bg-slate-900/90 border-b border-slate-800">
+                    <div class="flex items-center space-x-2">
+                        <button type="button" onclick="switchCodeTab('curl')" id="tab-curl" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-stripe-indigo text-white transition">
                             cURL
                         </button>
-                        <button onclick="switchCodeTab('python')" id="codeBtn-python" class="px-4 py-2 rounded-xl text-xs font-extrabold transition bg-slate-800 text-slate-300 hover:bg-slate-700">
-                            Python SDK
+                        <button type="button" onclick="switchCodeTab('python')" id="tab-python" class="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">
+                            Python
                         </button>
-                        <button onclick="switchCodeTab('nodejs')" id="codeBtn-nodejs" class="px-4 py-2 rounded-xl text-xs font-extrabold transition bg-slate-800 text-slate-300 hover:bg-slate-700">
-                            Node.js / TS
+                        <button type="button" onclick="switchCodeTab('nodejs')" id="tab-nodejs" class="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">
+                            Node.js
                         </button>
-                        <button onclick="switchCodeTab('php')" id="codeBtn-php" class="px-4 py-2 rounded-xl text-xs font-extrabold transition bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        <button type="button" onclick="switchCodeTab('php')" id="tab-php" class="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition">
                             PHP / Laravel
                         </button>
                     </div>
+
+                    <div class="flex items-center space-x-3">
+                        <a href="/openapi.yaml" target="_blank" class="text-xs font-mono font-bold text-slate-400 hover:text-white transition hidden sm:inline">
+                            openapi.yaml
+                        </a>
+                        <a href="/docs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition">
+                            Interactive Swagger Docs &rarr;
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Code Viewer Container -->
-                <div class="max-w-5xl mx-auto dark-glass-card rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative">
-                    
-                    <!-- Copy Button -->
-                    <button onclick="copyCurrentCodeSnippet()" class="absolute top-6 right-6 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs text-slate-300 font-mono font-bold flex items-center space-x-1.5 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <span id="copyBtnText">Copy Code</span>
-                    </button>
-
-                    <!-- Tab: JSON -->
-                    <div id="codeView-json" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px]">
-                        <pre id="codeSnippet-json">{
-  <span class="syn-key">"analysis_id"</span>: <span class="syn-str">"01m1xn8954a6bye6x91mhtjmkk"</span>,
-  <span class="syn-key">"status"</span>: <span class="syn-str">"completed"</span>,
-  <span class="syn-key">"created_at"</span>: <span class="syn-str">"2026-09-07T12:00:00+00:00"</span>,
-  <span class="syn-key">"wallet"</span>: {
-    <span class="syn-key">"network"</span>: <span class="syn-str">"tron"</span>,
-    <span class="syn-key">"address"</span>: <span class="syn-str">"TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx"</span>,
-    <span class="syn-key">"is_custodial_cex"</span>: <span class="syn-bool">false</span>,
-    <span class="syn-key">"wallet_age_days"</span>: <span class="syn-num">340</span>,
-    <span class="syn-key">"transactions_count"</span>: <span class="syn-num">118</span>
-  },
-  <span class="syn-key">"score"</span>: {
-    <span class="syn-key">"value"</span>: <span class="syn-num">94</span>,
-    <span class="syn-key">"segment"</span>: <span class="syn-str">"super_vip"</span>,
-    <span class="syn-key">"confidence"</span>: <span class="syn-num">0.98</span>,
-    <span class="syn-key">"key_drivers"</span>: [
-      <span class="syn-str">"visible_assets_gt_200k"</span>,
-      <span class="syn-str">"high_gambling_volume_gt_100k"</span>,
-      <span class="syn-str">"gambling_activity_last_48h"</span>,
-      <span class="syn-str">"SUPER_SHARK"</span>
-    ],
-    <span class="syn-key">"custom_tags"</span>: [<span class="syn-str">"SUPER_SHARK"</span>]
-  },
-  <span class="syn-key">"financial_profile"</span>: {
-    <span class="syn-key">"visible_balance_usd"</span>: <span class="syn-num">284500.00</span>,
-    <span class="syn-key">"lifetime_turnover_usd"</span>: <span class="syn-num">3480000.00</span>,
-    <span class="syn-key">"tokens"</span>: {
-      <span class="syn-key">"USDT"</span>: { <span class="syn-key">"amount"</span>: <span class="syn-num">280000.00</span>, <span class="syn-key">"usd_value"</span>: <span class="syn-num">280000.00</span> },
-      <span class="syn-key">"TRX"</span>: { <span class="syn-key">"amount"</span>: <span class="syn-num">18000.00</span>, <span class="syn-key">"usd_value"</span>: <span class="syn-num">4500.00</span> }
-    }
-  },
-  <span class="syn-key">"gambling"</span>: {
-    <span class="syn-key">"status"</span>: <span class="syn-str">"detected"</span>,
-    <span class="syn-key">"entities_count"</span>: <span class="syn-num">2</span>,
-    <span class="syn-key">"entities_list"</span>: [<span class="syn-str">"Stake.com"</span>, <span class="syn-str">"Rollbit"</span>],
-    <span class="syn-key">"total_flow_365d_usd"</span>: <span class="syn-num">1820000.00</span>,
-    <span class="syn-key">"last_gambling_activity"</span>: <span class="syn-str">"2026-09-07T08:30:00+00:00"</span>
-  },
-  <span class="syn-key">"credits_charged"</span>: <span class="syn-num">3</span>
-}</pre>
+                <!-- Code View -->
+                <div class="p-6 sm:p-8 font-mono text-xs overflow-x-auto text-slate-200">
+                    <!-- cURL -->
+                    <div id="codeSnippet-curl" class="space-y-1">
+                        <span class="text-stripe-cyan font-bold">curl</span> -X POST https://on-score.io/api/v1/score/wallet \<br>
+                        &nbsp;&nbsp;-H <span class="text-stripe-amber">"Authorization: Bearer ons_live_your_api_key_here"</span> \<br>
+                        &nbsp;&nbsp;-H <span class="text-stripe-emerald">"Content-Type: application/json"</span> \<br>
+                        &nbsp;&nbsp;-d '{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="syn-key">"chain"</span>: <span class="syn-str">"ETH"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="syn-key">"address"</span>: <span class="syn-str">"0x28c6c06298d514db089934071355e5743bf21d60"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="syn-key">"external_player_id"</span>: <span class="syn-str">"usr_casino_9021"</span><br>
+                        &nbsp;&nbsp;}'
                     </div>
 
-                    <!-- Tab: cURL -->
-                    <div id="codeView-curl" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
-                        <pre id="codeSnippet-curl">curl -X POST https://on-score.io/api/v1/analyses \
-  -H "X-API-Key: ons_live_your_api_key_here" \
-  -H "X-API-Secret: ons_sec_your_secret_hash_here" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "network": "tron",
-    "address": "TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx",
-    "external_player_id": "casino_user_9921",
-    "context": {
-      "deposit_amount": 500,
-      "deposit_asset": "USDT"
-    }
-  }'</pre>
+                    <!-- Python -->
+                    <div id="codeSnippet-python" class="space-y-1 hidden">
+                        <span class="text-stripe-cyan font-bold">import</span> requests<br><br>
+                        url = <span class="syn-str">"https://on-score.io/api/v1/score/wallet"</span><br>
+                        headers = {<br>
+                        &nbsp;&nbsp;<span class="syn-str">"Authorization"</span>: <span class="syn-str">"Bearer ons_live_your_api_key_here"</span>,<br>
+                        &nbsp;&nbsp;<span class="syn-str">"Content-Type"</span>: <span class="syn-str">"application/json"</span><br>
+                        }<br>
+                        payload = {<br>
+                        &nbsp;&nbsp;<span class="syn-key">"chain"</span>: <span class="syn-str">"ETH"</span>,<br>
+                        &nbsp;&nbsp;<span class="syn-key">"address"</span>: <span class="syn-str">"0x28c6c06298d514db089934071355e5743bf21d60"</span><br>
+                        }<br><br>
+                        response = requests.post(url, json=payload, headers=headers)<br>
+                        dossier = response.json()<br>
+                        print(f<span class="syn-str">"Player Scored: {dossier['score']['value']}/100. Segment: {dossier['score']['segment']}"</span>)
                     </div>
 
-                    <!-- Tab: Python -->
-                    <div id="codeView-python" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
-                        <pre id="codeSnippet-python">import requests
-
-url = "https://on-score.io/api/v1/analyses"
-headers = {
-    "X-API-Key": "ons_live_your_api_key_here",
-    "X-API-Secret": "ons_sec_your_secret_hash_here",
-    "Content-Type": "application/json"
-}
-payload = {
-    "network": "tron",
-    "address": "TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx",
-    "external_player_id": "casino_user_9921"
-}
-
-response = requests.post(url, json=payload, headers=headers)
-profile = response.json()
-
-# Trigger instant VIP host assignment if scored as super_vip
-if profile["score"]["segment"] == "super_vip":
-    print(f"VIP Shark Identified! Balance: ${profile['financial_profile']['visible_balance_usd']:,}")
-    print(f"Custom Tags: {profile['score']['custom_tags']}")</pre>
+                    <!-- Node.js -->
+                    <div id="codeSnippet-nodejs" class="space-y-1 hidden">
+                        <span class="text-stripe-cyan font-bold">import</span> axios <span class="text-stripe-cyan font-bold">from</span> <span class="syn-str">'axios'</span>;<br><br>
+                        <span class="text-stripe-purple font-bold">async function</span> scoreDeposit(address, chain = <span class="syn-str">'ETH'</span>) {<br>
+                        &nbsp;&nbsp;<span class="text-stripe-purple font-bold">const</span> { data } = <span class="text-stripe-purple font-bold">await</span> axios.post(<span class="syn-str">'https://on-score.io/api/v1/score/wallet'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;chain,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;address,<br>
+                        &nbsp;&nbsp;}, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;headers: { <span class="syn-str">'Authorization'</span>: <span class="syn-str">`Bearer ${process.env.ONSCORE_API_KEY}`</span> }<br>
+                        &nbsp;&nbsp;});<br><br>
+                        &nbsp;&nbsp;<span class="text-stripe-purple font-bold">if</span> (data.score.segment === <span class="syn-str">'super_vip'</span>) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;console.log(<span class="syn-str">`[VIP ALERT] Whale detected: $${data.financial_profile.visible_balance_usd}`</span>);<br>
+                        &nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;<span class="text-stripe-purple font-bold">return</span> data;<br>
+                        }
                     </div>
 
-                    <!-- Tab: Node.js -->
-                    <div id="codeView-nodejs" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
-                        <pre id="codeSnippet-nodejs">import axios from 'axios';
-
-async function evaluatePlayerDeposit(walletAddress, network = 'tron') {
-  const { data } = await axios.post('https://on-score.io/api/v1/analyses', {
-    network,
-    address: walletAddress,
-    external_player_id: 'casino_user_9921'
-  }, {
-    headers: {
-      'X-API-Key': process.env.ONSCORE_API_KEY,
-      'X-API-Secret': process.env.ONSCORE_API_SECRET
-    }
-  });
-
-  if (data.score.segment === 'super_vip') {
-    // Notify VIP manager on Telegram or CRM
-    console.log(`[VIP ALERT] Player scored ${data.score.value}/100. Tags:`, data.score.custom_tags);
-  }
-
-  return data;
-}</pre>
-                    </div>
-
-                    <!-- Tab: PHP -->
-                    <div id="codeView-php" class="font-mono text-xs text-slate-200 overflow-x-auto max-h-[500px] hidden">
-                        <pre id="codeSnippet-php">&lt;?php
-
-use Illuminate\Support\Facades\Http;
-
-$response = Http::withHeaders([
-    'X-API-Key' => config('services.onscore.key'),
-    'X-API-Secret' => config('services.onscore.secret'),
-])->post('https://on-score.io/api/v1/analyses', [
-    'network' => 'tron',
-    'address' => 'TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx',
-    'external_player_id' => 'casino_user_9921',
-]);
-
-$dossier = $response->json();
-
-if ($dossier['score']['segment'] === 'super_vip') {
-    // Dispatch VIP bonus & high-roller treatment
-    event(new HighRollerPlayerDetected($dossier));
-}</pre>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- 3x3 FEATURE MATRIX GRID (PayAdmit Style) -->
-        <section id="features" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3 mb-16">
-                <span class="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200">Platform Capabilities</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Engineered for High-Stakes Operations</h2>
-                <p class="text-sm sm:text-base text-slate-600">
-                    Everything crypto casinos and sportsbooks need to maximize player LTV and protect treasury margins.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- 1 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-black">
-                        ⚡
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Sub-1.2s Real-Time Latency</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Evaluates deposit transactions instantaneously before the player even finishes loading the casino lobby.
-                    </p>
-                </div>
-
-                <!-- 2 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-black">
-                        🛡️
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">CEX Sweeper Pool Isolation</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Recognizes Bybit, Binance, OKX hot wallets and sweeps to ensure pooled exchange balances are never attributed to individual players.
-                    </p>
-                </div>
-
-                <!-- 3 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-black">
-                        🎰
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Cross-Casino Footprints</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Identifies historical deposits and withdrawals across Stake.com, Rollbit, BC.Game, Roobet, and 1xBet.
-                    </p>
-                </div>
-
-                <!-- 4 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-black">
-                        ⚙️
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Custom Client Scoring Rules</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Customize asset thresholds ($200k+), custom tag names (SUPER_SHARK), and VIP tiers per casino operator in the Admin portal.
-                    </p>
-                </div>
-
-                <!-- 5 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-800 flex items-center justify-center font-black">
-                        🌐
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Full 5-Chain Support</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Native support for TRON (TRC20), Ethereum (ERC20), BNB Chain (BEP20), Solana (SPL), and Bitcoin (UTXO).
-                    </p>
-                </div>
-
-                <!-- 6 -->
-                <div class="gradient-border-card p-6 space-y-3">
-                    <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center font-black">
-                        🔒
-                    </div>
-                    <h4 class="font-extrabold text-slate-900 text-base">Immutable Ledger & Auth</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        B2B API authentication with Key & Secret hashing, atomic credit reservation, and transparent billing audit ledger.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- FAQ ACCORDION SECTION (PayAdmit Style) -->
-        <section id="faq" class="py-20 bg-white border-t border-slate-200">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                <div class="text-center space-y-2">
-                    <span class="text-xs font-black uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3.5 py-1 rounded-full border border-indigo-200">FAQ</span>
-                    <h2 class="text-3xl font-black text-slate-900">Frequently Asked Questions</h2>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Q1 -->
-                    <div class="border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition bg-slate-50">
-                        <div class="font-extrabold text-slate-900 text-sm">How does On-Score detect VIP players on their very first deposit?</div>
-                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                            When a player deposits crypto, their wallet address is publicly recorded on the blockchain. On-Score queries indexed nodes to analyze historical turnover, current liquid balances (USDT, ETH, BTC, SOL), and past interactions with known gaming smart contracts.
-                        </p>
-                    </div>
-
-                    <!-- Q2 -->
-                    <div class="border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition bg-slate-50">
-                        <div class="font-extrabold text-slate-900 text-sm">What prevents an exchange hot wallet from being marked as a VIP?</div>
-                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                            Our proprietary Entity Attribution service maintains a real-time database of exchange custodial hot wallets (Bybit, Binance, OKX). If an address matches an exchange pool, the collective balance is zeroed out (<code class="text-xs bg-slate-200 px-1 py-0.5 rounded font-bold">visible_assets: $0.00</code>) and flagged accordingly.
-                        </p>
-                    </div>
-
-                    <!-- Q3 -->
-                    <div class="border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition bg-slate-50">
-                        <div class="font-extrabold text-slate-900 text-sm">How can we configure custom scoring rules for our casino?</div>
-                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                            Inside the On-Score Admin Portal, each B2B client account has a dedicated "Custom Rules" configuration manager. You can adjust balance thresholds (e.g. $200k) and assign custom tag strings (e.g. <code class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-1 py-0.5 rounded font-bold">SUPER_SHARK</code>).
-                        </p>
+                    <!-- PHP -->
+                    <div id="codeSnippet-php" class="space-y-1 hidden">
+                        &lt;?php<br><br>
+                        <span class="text-stripe-cyan font-bold">use</span> Illuminate\Support\Facades\Http;<br><br>
+                        $response = Http::withToken(config(<span class="syn-str">'services.onscore.key'</span>))<br>
+                        &nbsp;&nbsp;-&gt;post(<span class="syn-str">'https://on-score.io/api/v1/score/wallet'</span>, [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="syn-str">'chain'</span> =&gt; <span class="syn-str">'ETH'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="syn-str">'address'</span> =&gt; <span class="syn-str">'0x28c6c06298d514db089934071355e5743bf21d60'</span>,<br>
+                        &nbsp;&nbsp;]);<br><br>
+                        $dossier = $response-&gt;json();
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </div>
+    <!-- ========================================== -->
+    <!-- 7. STRIPE GRADIENT CTA & FOOTER            -->
+    <!-- ========================================== -->
+    <section class="relative py-24 bg-white border-t border-stripe-border overflow-hidden">
+        <!-- Accent Gradient Blob -->
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-stripe-indigo/30 to-stripe-pink/30 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- HIGH-CONVERTING BOTTOM CTA SECTION (PayAdmit Dark Atmospheric Theme) -->
-    <section class="py-24 bg-night-950 text-white text-center relative border-t border-white/10 hero-mesh">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
-            <span class="text-xs font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30">Get Started Today</span>
-            <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white">
-                Start Scoring Crypto Players at Scale
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
+            <h2 class="text-4xl sm:text-5xl font-black text-stripe-navy tracking-tight max-w-3xl mx-auto">
+                Ready to transform your crypto player scoring?
             </h2>
-            <p class="text-sm sm:text-base text-slate-300 max-w-xl mx-auto font-normal">
-                Integrate in under 15 minutes. Explore the interactive OpenAPI documentation or sign in to the Admin Portal to generate live API credentials.
+            <p class="text-base sm:text-lg text-stripe-slate max-w-xl mx-auto">
+                Start evaluating live wallet deposits, VIP whales, and AML clusters with instant enterprise credentials.
             </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <a href="/docs" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-night-950 text-sm font-black rounded-2xl shadow-xl shadow-emerald-500/20 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    <span>Open API Documentation (/docs)</span>
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <a href="/login" class="stripe-pill-button px-8 py-4 rounded-full text-sm font-extrabold text-white bg-stripe-indigo hover:bg-stripe-indigo-hover shadow-xl shadow-stripe-indigo/30 transition">
+                    Access Portal & API Keys &rarr;
                 </a>
-                <a href="/login" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/15 border border-white/20 text-white text-sm font-bold rounded-2xl transition">
-                    Admin Portal Sign In
+                <a href="/docs" class="px-7 py-4 rounded-full text-sm font-bold text-stripe-navy bg-white hover:bg-slate-50 border border-stripe-border shadow-sm transition">
+                    Explore API Reference
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-night-950 border-t border-white/10 py-10 text-xs text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <div class="flex items-center space-x-3">
-                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center font-black text-white text-xs">
-                    O
+    <!-- Footer -->
+    <footer class="bg-stripe-light border-t border-stripe-border py-12 text-xs text-stripe-slate">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-xl bg-stripe-indigo text-white flex items-center justify-center font-bold text-sm">
+                        O
+                    </div>
+                    <span class="text-base font-black text-stripe-navy">on-score.io</span>
                 </div>
-                <div>
-                    &copy; 2026 <strong class="text-white font-extrabold">on-score.io</strong>. High-Agency On-Chain Intelligence Platform.
+                <div class="flex items-center space-x-6 font-bold text-stripe-navy">
+                    <a href="/docs" class="hover:text-stripe-indigo transition">API Reference</a>
+                    <a href="/openapi.yaml" class="hover:text-stripe-indigo transition">OpenAPI 3.0</a>
+                    <a href="/login" class="hover:text-stripe-indigo transition">Admin Portal</a>
                 </div>
             </div>
-            <div class="flex space-x-6 text-slate-300 font-semibold">
-                <a href="/docs" class="hover:text-emerald-400">API Documentation</a>
-                <a href="/OnScore_API_Postman_Collection.json" download class="hover:text-orange-400">Postman Collection</a>
-                <a href="/login" class="hover:text-emerald-400">Admin Portal</a>
-                <span class="text-slate-500">Model: WPS-v1.0</span>
+            <div class="border-t border-slate-200/80 pt-6 flex flex-col sm:flex-row items-center justify-between text-slate-400 gap-2">
+                <div>
+                    &copy; {{ date('Y') }} on-score.io. High-Performance On-Chain Cryptocurrency Intelligence & Player Scoring Gateway.
+                </div>
+                <div class="flex space-x-4 font-mono text-[11px]">
+                    <span>WPS-v2.4 Engine</span>
+                    <span>•</span>
+                    <span>Multi-Chain Aggregator</span>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Interactive JavaScript -->
+    <!-- Interactive Simulator & Code Switcher Scripts -->
     <script>
-    // Presets for the Interactive Simulator
-    const presets = {
-        whale_eth: {
-            address: "0xde0B29...7BAe (Ethereum)",
-            network: "Ethereum Mainnet",
-            badge: "VIP",
-            badgeClass: "bg-gradient-to-tr from-amber-500 to-amber-300 text-night-950",
-            statusText: "SUPER_SHARK",
-            statusBadgeClass: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-            score: 94,
-            scoreBoxClass: "bg-gradient-to-tr from-amber-500 to-amber-300 text-night-950",
-            scoreTier: "VIP Tier 5 (SUPER_SHARK)",
-            confidence: "Confidence: 98% • Latency: 0.94s",
-            balanceUsd: "$24,864,346",
-            balanceTokens: "6,774.49 ETH + USDT",
-            gamblingFlow: "$1,820,000",
-            gamblingBrands: "Stake.com, Rollbit",
-            tags: ["#SUPER_SHARK", "#WHALE_LIQUIDITY_GT_400K", "#STAKE_VETERAN"],
-            bottomText: "VIP Host Auto-Assigned in CRM",
-            simBadge: "🐋 High-Roller Shark Profile",
-            headline: "High-Net-Worth VIP Detected ($24.8M)",
-            description: "This wallet holds massive liquid ETH and stablecoin balances, with a proven history of 7-figure wagers on Stake and Rollbit. On-Score flags this player as SUPER_SHARK and assigns top VIP priority.",
-            actionRec: "Assign Dedicated VIP Host",
-            actionDetail: "Trigger custom high-roller retention flow, raise deposit limits, and enable 1-on-1 VIP concierge support.",
-            jsonSnippet: `{\n  "status": "completed",\n  "score": {\n    "value": 94,\n    "segment": "super_vip",\n    "custom_tags": ["SUPER_SHARK", "HIGH_ROLLER_VIP"]\n  },\n  "wallet": {\n    "visible_balance_usd": 24864346.00,\n    "is_custodial_cex": false\n  },\n  "gambling": {\n    "status": "detected",\n    "total_flow_365d_usd": 1820000.00,\n    "entities_list": ["Stake.com", "Rollbit"]\n  }\n}`
-        },
-        tron_gambler: {
-            address: "TH7XRsb...GUvYx (TRON TRC-20)",
-            network: "TRON Mainnet",
-            badge: "VIP",
-            badgeClass: "bg-gradient-to-tr from-emerald-400 to-teal-500 text-night-950",
-            statusText: "HIGH_ROLLER",
-            statusBadgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-            score: 88,
-            scoreBoxClass: "bg-gradient-to-tr from-emerald-400 to-teal-500 text-night-950",
-            scoreTier: "VIP Tier 4 (High Roller)",
-            confidence: "Confidence: 96% • Latency: 0.82s",
-            balanceUsd: "$284,500",
-            balanceTokens: "280,000 USDT + TRX",
-            gamblingFlow: "$640,000",
-            gamblingBrands: "Stake.com, BC.Game",
-            tags: ["#HIGH_ROLLER", "#FREQUENT_DEPOSITOR", "#STAKE_USER"],
-            bottomText: "Automated 20% Deposit Match Bonus Queued",
-            simBadge: "⚡ Active TRON Gambler Profile",
-            headline: "Active High-Velocity Bettor ($284k)",
-            description: "Frequent TRON USDT depositor with rapid turnover and regular betting activity across multiple casinos. High retention potential.",
-            actionRec: "Instant Retention Reload Offer",
-            actionDetail: "Dispatch automated personalized reload offer and fast-track withdrawal queue.",
-            jsonSnippet: `{\n  "status": "completed",\n  "score": {\n    "value": 88,\n    "segment": "vip",\n    "custom_tags": ["HIGH_ROLLER", "FREQUENT_DEPOSITOR"]\n  },\n  "wallet": {\n    "visible_balance_usd": 284500.00,\n    "is_custodial_cex": false\n  },\n  "gambling": {\n    "status": "detected",\n    "total_flow_365d_usd": 640000.00,\n    "entities_list": ["Stake.com", "BC.Game"]\n  }\n}`
-        },
-        bybit_cex: {
-            address: "TLyqzV...TmTX71 (Bybit Hot Pool)",
-            network: "TRON (Custodial)",
-            badge: "CEX",
-            badgeClass: "bg-gradient-to-tr from-rose-500 to-red-400 text-white",
-            statusText: "CEX_HOT_WALLET",
-            statusBadgeClass: "bg-rose-500/20 text-rose-300 border-rose-500/40",
-            score: 0,
-            scoreBoxClass: "bg-gradient-to-tr from-slate-700 to-slate-800 text-slate-300",
-            scoreTier: "Non-Individual (Exchange Pool)",
-            confidence: "Attribution: 100% Bybit Hot Wallet",
-            balanceUsd: "$0.00 (Adjusted)",
-            balanceTokens: "Raw $85M Swept to $0",
-            gamblingFlow: "$0.00",
-            gamblingBrands: "None (Pooled Address)",
-            tags: ["#CEX_HOT_WALLET", "#ANTI_HALLUCINATION", "#NON_INDIVIDUAL"],
-            bottomText: "False-VIP Hallucination Suppressed",
-            simBadge: "🛡️ Exchange Hot Pool (Anti-Hallucination)",
-            headline: "Bybit Exchange Pool Isolated ($0.00 Visible)",
-            description: "On-Score recognizes this as a shared custodial hot wallet. It prevents the casino from erroneously assigning VIP perks or credit based on pooled customer funds.",
-            actionRec: "Standard Retail Cashier Routing",
-            actionDetail: "Treat as standard retail player; do not issue exclusive whale perks based on exchange treasury size.",
-            jsonSnippet: `{\n  "status": "completed",\n  "score": {\n    "value": 0,\n    "segment": "unrated",\n    "custom_tags": ["CEX_HOT_WALLET"]\n  },\n  "wallet": {\n    "visible_balance_usd": 0.00,\n    "is_custodial_cex": true,\n    "entity_name": "Bybit Hot Wallet 1"\n  }\n}`
-        },
-        casual_sol: {
-            address: "4k3Dyj...91nB4 (Solana SPL)",
-            network: "Solana Mainnet",
-            badge: "STD",
-            badgeClass: "bg-gradient-to-tr from-slate-600 to-slate-700 text-white",
-            statusText: "CASUAL_PLAYER",
-            statusBadgeClass: "bg-slate-500/20 text-slate-300 border-slate-500/40",
-            score: 18,
-            scoreBoxClass: "bg-gradient-to-tr from-slate-700 to-slate-800 text-slate-300",
-            scoreTier: "Retail Tier 1 (Casual)",
-            confidence: "Confidence: 94% • Latency: 0.65s",
-            balanceUsd: "$145.20",
-            balanceTokens: "0.85 SOL + $25 USDT",
-            gamblingFlow: "$0.00",
-            gamblingBrands: "No History",
-            tags: ["#CASUAL_PLAYER", "#LOW_ACTIVITY", "#NEW_WALLET"],
-            bottomText: "Standard Automated Onboarding Triggered",
-            simBadge: "💤 Casual Solana Wallet Profile",
-            headline: "Standard Retail Depositor ($145)",
-            description: "Small balance and no prior gambling footprint. Suitable for standard automated retail welcome campaigns without manual host intervention.",
-            actionRec: "Welcome Free Spins Campaign",
-            actionDetail: "Trigger standard gamified welcome bonus flow and regular churn-prevention sequence.",
-            jsonSnippet: `{\n  "status": "completed",\n  "score": {\n    "value": 18,\n    "segment": "casual",\n    "custom_tags": ["CASUAL_PLAYER"]\n  },\n  "wallet": {\n    "visible_balance_usd": 145.20,\n    "is_custodial_cex": false\n  },\n  "gambling": {\n    "status": "none",\n    "total_flow_365d_usd": 0.00\n  }\n}`
-        }
-    };
-
-    function setSimulationPreset(key) {
-        const p = presets[key];
-        if (!p) return;
-
-        // Button states
-        ['whale_eth', 'tron_gambler', 'bybit_cex', 'casual_sol'].forEach(k => {
-            const btn = document.getElementById('simBtn-' + k);
-            if (btn) {
-                if (k === key) {
-                    btn.className = 'px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-slate-900 text-white border-slate-900 shadow-md flex items-center space-x-2';
-                } else {
-                    btn.className = 'px-4 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-2';
+        const PRESETS = {
+            vip: {
+                network: 'ethereum',
+                address: '0x28c6c06298d514db089934071355e5743bf21d60',
+                tag: 'SUPER_VIP_SHARK',
+                score: '98 / 100',
+                balance: '$482,500',
+                flow: '$1.42M',
+                decision: 'AUTO_APPROVE',
+                json: {
+                    analysis_id: "01m22vdmk7j2c1jg9kgekbf3zd",
+                    status: "completed",
+                    network: "ethereum",
+                    address: "0x28c6c06298d514db089934071355e5743bf21d60",
+                    score: {
+                        value: 98,
+                        segment: "super_vip",
+                        custom_tags: ["SUPER_SHARK", "HIGH_LIQUIDITY_WHALE"],
+                        recommendation: "auto_approve"
+                    },
+                    financial_profile: {
+                        visible_balance_usd: 482500,
+                        primary_assets: { "ETH": 142.5, "USDT": 150000 }
+                    },
+                    gambling_intelligence: {
+                        is_gambler: true,
+                        entities_count: 8,
+                        total_flow_365d_usd: 1420000
+                    }
+                }
+            },
+            casino: {
+                network: 'tron',
+                address: 'TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx',
+                tag: 'POTENTIAL_VIP',
+                score: '84 / 100',
+                balance: '$65,200',
+                flow: '$240,000',
+                decision: 'AUTO_APPROVE',
+                json: {
+                    analysis_id: "01m22vdmk7j2c1jg9kgekbf4ab",
+                    status: "completed",
+                    network: "tron",
+                    address: "TH7XRsbntBXxdLGx47b1xy2NgAhKfGUvYx",
+                    score: {
+                        value: 84,
+                        segment: "potential_vip",
+                        custom_tags: ["STAKE_HIGH_ROLLER", "ACTIVE_GAMBLER"],
+                        recommendation: "auto_approve"
+                    },
+                    financial_profile: {
+                        visible_balance_usd: 65200,
+                        primary_assets: { "USDT_TRC20": 65000, "TRX": 2500 }
+                    },
+                    gambling_intelligence: {
+                        is_gambler: true,
+                        entities_count: 4,
+                        total_flow_365d_usd: 240000
+                    }
+                }
+            },
+            hunter: {
+                network: 'bsc',
+                address: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3',
+                tag: 'BONUS_HUNTER',
+                score: '35 / 100',
+                balance: '$1,250',
+                flow: '$18,400',
+                decision: 'STEP_UP_VERIFICATION',
+                json: {
+                    analysis_id: "01m22vdmk7j2c1jg9kgekbf5cd",
+                    status: "completed",
+                    network: "bsc",
+                    address: "0x8894e0a0c962cb723c1976a4421c95949be2d4e3",
+                    score: {
+                        value: 35,
+                        segment: "bonus_hunter",
+                        custom_tags: ["RAPID_MICRO_SWEEPS", "CLUSTER_ASSOCIATED"],
+                        recommendation: "step_up_verification"
+                    },
+                    financial_profile: {
+                        visible_balance_usd: 1250,
+                        primary_assets: { "BNB": 1.2, "USDT_BEP20": 650 }
+                    },
+                    gambling_intelligence: {
+                        is_gambler: true,
+                        entities_count: 11,
+                        total_flow_365d_usd: 18400
+                    }
+                }
+            },
+            aml: {
+                network: 'ethereum',
+                address: '0x0d0707963952f2fba59dd06f2b425ace40b492fe',
+                tag: 'HIGH_RISK_AML',
+                score: '12 / 100',
+                balance: '$840',
+                flow: '$85,000',
+                decision: 'BLOCK_AND_REVIEW',
+                json: {
+                    analysis_id: "01m22vdmk7j2c1jg9kgekbf6ef",
+                    status: "completed",
+                    network: "ethereum",
+                    address: "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+                    score: {
+                        value: 12,
+                        segment: "high_risk_aml",
+                        custom_tags: ["TORNADO_DIRECT_HOP", "SANCTION_FLAG"],
+                        recommendation: "block_and_review"
+                    },
+                    financial_profile: {
+                        visible_balance_usd: 840,
+                        primary_assets: { "ETH": 0.3 }
+                    },
+                    gambling_intelligence: {
+                        is_gambler: false,
+                        entities_count: 0,
+                        total_flow_365d_usd: 0
+                    }
                 }
             }
-        });
+        };
 
-        // Update Hero Mockup Card
-        const cardBadgeIcon = document.getElementById('cardBadgeIcon');
-        if (cardBadgeIcon) {
-            cardBadgeIcon.innerText = p.badge;
-            cardBadgeIcon.className = `w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm font-mono shadow-md ${p.badgeClass}`;
+        function selectPreset(type) {
+            const data = PRESETS[type];
+            if (!data) return;
+
+            // Highlight button
+            ['vip', 'casino', 'hunter', 'aml'].forEach(t => {
+                const btn = document.getElementById('btnPreset-' + t);
+                if (t === type) {
+                    btn.className = "p-3.5 rounded-2xl border-2 border-stripe-indigo bg-stripe-indigo/5 text-left transition hover:scale-[1.02]";
+                } else {
+                    btn.className = "p-3.5 rounded-2xl border border-slate-200 bg-white text-left transition hover:border-stripe-indigo hover:scale-[1.02]";
+                }
+            });
+
+            document.getElementById('simNetwork').value = data.network;
+            document.getElementById('simAddress').value = data.address;
+            
+            runSimulation(data);
         }
-        document.getElementById('cardPlayerAddress').innerText = p.address;
-        
-        const cardStatusBadge = document.getElementById('cardStatusBadge');
-        cardStatusBadge.innerText = p.statusText;
-        cardStatusBadge.className = `px-2.5 py-1 rounded-lg border text-[10px] font-black uppercase tracking-wider ${p.statusBadgeClass}`;
 
-        document.getElementById('cardScoreTier').innerText = p.scoreTier;
-        document.getElementById('cardConfidence').innerText = p.confidence;
-        document.getElementById('cardScoreNumber').innerText = p.score;
-        
-        const cardScoreBox = document.getElementById('cardScoreBox');
-        cardScoreBox.className = `w-16 h-16 rounded-2xl flex flex-col items-center justify-center font-black shadow-lg ${p.scoreBoxClass}`;
+        function runSimulation(presetData = null) {
+            const net = document.getElementById('simNetwork').value;
+            const addr = document.getElementById('simAddress').value;
+            const btn = document.getElementById('simRunBtn');
 
-        document.getElementById('cardBalanceUsd').innerText = p.balanceUsd;
-        document.getElementById('cardBalanceTokens').innerText = p.balanceTokens;
-        document.getElementById('cardGamblingFlow').innerText = p.gamblingFlow;
-        document.getElementById('cardGamblingBrands').innerText = p.gamblingBrands;
-        document.getElementById('cardBottomText').innerText = p.bottomText;
+            btn.innerHTML = '<span>Scanning On-Chain...</span>';
+            btn.classList.add('opacity-75');
 
-        // Update tags
-        const tagsContainer = document.getElementById('cardTagsContainer');
-        tagsContainer.innerHTML = p.tags.map(t => `<span class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-bold">${t}</span>`).join('');
+            setTimeout(() => {
+                btn.innerHTML = '<span>Score Wallet</span><span>&rarr;</span>';
+                btn.classList.remove('opacity-75');
 
-        // Update Simulator section
-        document.getElementById('simArchetypeBadge').innerText = p.simBadge;
-        document.getElementById('simNetworkBadge').innerText = p.network;
-        document.getElementById('simHeadline').innerText = p.headline;
-        document.getElementById('simDescription').innerText = p.description;
-        document.getElementById('simActionRec').innerText = p.actionRec;
-        document.getElementById('simActionDetail').innerText = p.actionDetail;
-        document.getElementById('simJsonSnippet').innerText = p.jsonSnippet;
-    }
-
-    function switchTab(tabKey) {
-        ['scoring', 'cex', 'gambling', 'rules'].forEach(k => {
-            const btn = document.getElementById('tabBtn-' + k);
-            const content = document.getElementById('tabContent-' + k);
-            if (k === tabKey) {
-                btn.className = 'px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-slate-900 text-white border-slate-900 shadow-md';
-                content.classList.remove('hidden');
-            } else {
-                btn.className = 'px-5 py-2.5 rounded-xl font-extrabold text-xs transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
-                content.classList.add('hidden');
-            }
-        });
-    }
-
-    let currentActiveCodeTab = 'json';
-    function switchCodeTab(lang) {
-        currentActiveCodeTab = lang;
-        ['json', 'curl', 'python', 'nodejs', 'php'].forEach(l => {
-            const btn = document.getElementById('codeBtn-' + l);
-            const view = document.getElementById('codeView-' + l);
-            if (l === lang) {
-                btn.className = 'px-4 py-2 rounded-xl text-xs font-extrabold transition bg-indigo-600 text-white shadow-md';
-                view.classList.remove('hidden');
-            } else {
-                btn.className = 'px-4 py-2 rounded-xl text-xs font-extrabold transition bg-slate-800 text-slate-300 hover:bg-slate-700';
-                view.classList.add('hidden');
-            }
-        });
-    }
-
-    function copyCurrentCodeSnippet() {
-        const codeElement = document.getElementById('codeSnippet-' + currentActiveCodeTab);
-        if (codeElement) {
-            navigator.clipboard.writeText(codeElement.innerText);
-            const btnText = document.getElementById('copyBtnText');
-            btnText.innerText = 'Copied!';
-            setTimeout(() => { btnText.innerText = 'Copy Code'; }, 2000);
+                const data = presetData || PRESETS.vip;
+                document.getElementById('simTagBadge').innerText = data.tag;
+                document.getElementById('simScoreVal').innerText = data.score;
+                document.getElementById('simBalanceVal').innerText = data.balance;
+                document.getElementById('simFlowVal').innerText = data.flow;
+                document.getElementById('simDecisionVal').innerText = data.decision;
+                document.getElementById('simJsonCode').innerText = JSON.stringify(data.json, null, 2);
+            }, 300);
         }
-    }
+
+        function switchCodeTab(tab) {
+            ['curl', 'python', 'nodejs', 'php'].forEach(t => {
+                const snippet = document.getElementById('codeSnippet-' + t);
+                const tabBtn = document.getElementById('tab-' + t);
+                if (t === tab) {
+                    snippet.classList.remove('hidden');
+                    tabBtn.className = "px-4 py-2 rounded-xl text-xs font-extrabold bg-stripe-indigo text-white transition";
+                } else {
+                    snippet.classList.add('hidden');
+                    tabBtn.className = "px-4 py-2 rounded-xl text-xs font-extrabold text-slate-400 hover:text-white transition";
+                }
+            });
+        }
     </script>
 </body>
 </html>

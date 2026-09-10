@@ -17,8 +17,8 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('OnScore');
-        $response->assertSee('VIP Player Detection');
+        $response->assertSee('on-score');
+        $response->assertSee('intelligence for crypto gaming');
     }
 
     public function test_the_app_dashboard_renders(): void
@@ -29,7 +29,7 @@ class ExampleTest extends TestCase
         $response = $this->actingAs($admin)->get('/app');
 
         $response->assertStatus(200);
-        $response->assertSee('OnScore');
+        $response->assertSee('On-Score');
         $response->assertSee('Dashboard');
     }
 }
