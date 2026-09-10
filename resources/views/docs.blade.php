@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>on-score.io — B2B Intelligence & Player Scoring API Reference</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,10 +29,10 @@
         .swagger-ui .opblock { border-radius: 16px !important; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important; margin-bottom: 16px !important; border: 1px solid #e2e8f0 !important; }
         .swagger-ui .opblock .opblock-summary { padding: 12px 16px !important; }
         .swagger-ui .opblock.opblock-post { background: rgba(79, 70, 229, 0.03) !important; border-color: #c7d2fe !important; }
-        .swagger-ui .opblock.opblock-post .opblock-summary-method { background: #4f46e5 !important; border-radius: 8px; font-weight: 800; }
+        .swagger-ui .opblock.opblock-post .opblock-summary-method { background: #635bff !important; border-radius: 8px; font-weight: 800; }
         .swagger-ui .opblock.opblock-get { background: rgba(16, 185, 129, 0.03) !important; border-color: #a7f3d0 !important; }
         .swagger-ui .opblock.opblock-get .opblock-summary-method { background: #10b981 !important; border-radius: 8px; font-weight: 800; }
-        .swagger-ui .btn.authorize { background: #4f46e5; color: white; border-radius: 12px; border: none; font-weight: 700; padding: 8px 20px; }
+        .swagger-ui .btn.authorize { background: #635bff; color: white; border-radius: 12px; border: none; font-weight: 700; padding: 8px 20px; }
         .swagger-ui .btn.authorize svg { fill: white; }
     </style>
 </head>
@@ -39,11 +42,28 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <a href="/" class="flex items-center space-x-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center shadow-md shadow-indigo-100">
-                        <span class="text-white font-black text-sm tracking-wider">OS</span>
+                <a href="/" class="flex items-center space-x-3 group">
+                    <div class="w-8 h-8 rounded-xl bg-white border border-slate-200 p-1 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                            <defs>
+                                <linearGradient id="docOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="35%" stop-color="#635bff" />
+                                    <stop offset="70%" stop-color="#7a73ff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                                <linearGradient id="docPulseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="50%" stop-color="#635bff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="32" stroke="url(#docOrbitGrad)" stroke-width="7.5" stroke-linecap="round" />
+                            <ellipse cx="50" cy="50" rx="44" ry="18" stroke="url(#docOrbitGrad)" stroke-width="6" transform="rotate(-30 50 50)" stroke-linecap="round" />
+                            <path d="M 24 50 L 38 50 L 44 65 L 56 32 L 63 56 L 68 50 L 76 50" stroke="url(#docPulseGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
-                    <span class="text-xl font-extrabold tracking-tight text-slate-900">On-Score<span class="text-indigo-600">.io</span></span>
+                    <span class="text-xl font-black tracking-tight text-slate-900">On-Score<span class="text-[#635bff]">.io</span></span>
                 </a>
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
                     API Docs v1.0

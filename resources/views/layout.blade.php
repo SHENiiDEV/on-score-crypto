@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'on-score.io — On-Chain Gambling Intelligence & Scoring Platform')</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +26,7 @@
                             500: '#10b981',
                             600: '#059669',
                             700: '#047857',
-                            accent: '#4f46e5',
+                            accent: '#635bff',
                             vip: '#d97706',
                         }
                     }
@@ -49,13 +52,31 @@
     <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-6">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-indigo-600 flex items-center justify-center font-extrabold text-white text-lg shadow-md shadow-emerald-500/20">
-                        O
+                <!-- 2-Part Brand Logo -->
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 group">
+                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 p-1 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                            <defs>
+                                <linearGradient id="lyOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="35%" stop-color="#635bff" />
+                                    <stop offset="70%" stop-color="#7a73ff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                                <linearGradient id="lyPulseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="50%" stop-color="#635bff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="32" stroke="url(#lyOrbitGrad)" stroke-width="7.5" stroke-linecap="round" />
+                            <ellipse cx="50" cy="50" rx="44" ry="18" stroke="url(#lyOrbitGrad)" stroke-width="6" transform="rotate(-30 50 50)" stroke-linecap="round" />
+                            <path d="M 24 50 L 38 50 L 44 65 L 56 32 L 63 56 L 68 50 L 76 50" stroke="url(#lyPulseGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
                     <div>
-                        <span class="text-xl font-black tracking-tight text-slate-900">On-Score<span class="text-emerald-600">.io</span></span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-700 block -mt-1">Gambling Intelligence</span>
+                        <span class="text-xl font-black tracking-tight text-slate-900 leading-none block">On-Score<span class="text-[#635bff]">.io</span></span>
+                        <span class="text-[9px] uppercase font-extrabold tracking-wider text-slate-500 block">Intelligence Platform</span>
                     </div>
                 </a>
 

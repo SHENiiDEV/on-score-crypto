@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>on-score.io — On-Chain Player Intelligence & Crypto Scoring Infrastructure</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -160,18 +164,37 @@
     <!-- ========================================== -->
     <header class="relative z-30 w-full transition-all bg-white/80 backdrop-blur-md border-b border-stripe-border/60 sticky top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
+            <!-- Brand Logo: 2 Parts (Left Icon + Right Text) -->
             <div class="flex items-center space-x-8">
-                <a href="/" class="flex items-center space-x-3 group">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-stripe-indigo via-stripe-purple to-stripe-pink flex items-center justify-center font-black text-white text-xl shadow-lg shadow-stripe-indigo/25 group-hover:scale-105 transition-transform">
-                        O
+                <a href="/" class="flex items-center space-x-3.5 group">
+                    <!-- Left Icon Emblem -->
+                    <div class="w-10 h-10 rounded-2xl bg-white border border-slate-200/90 p-1.5 shadow-md shadow-indigo-500/10 group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                            <defs>
+                                <linearGradient id="navOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="35%" stop-color="#635bff" />
+                                    <stop offset="70%" stop-color="#7a73ff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                                <linearGradient id="navPulseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="50%" stop-color="#635bff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="32" stroke="url(#navOrbitGrad)" stroke-width="7.5" stroke-linecap="round" />
+                            <ellipse cx="50" cy="50" rx="44" ry="18" stroke="url(#navOrbitGrad)" stroke-width="6" transform="rotate(-30 50 50)" stroke-linecap="round" />
+                            <path d="M 24 50 L 38 50 L 44 65 L 56 32 L 63 56 L 68 50 L 76 50" stroke="url(#navPulseGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
+                    <!-- Right Text -->
                     <div class="flex flex-col">
-                        <span class="text-2xl font-black tracking-tight text-stripe-navy font-sans">
+                        <span class="text-2xl font-black tracking-tight text-stripe-navy font-sans leading-none">
                             on-score<span class="text-stripe-indigo">.io</span>
                         </span>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-stripe-slate -mt-1">
-                            Intelligence Infrastructure
+                        <span class="text-[9px] uppercase font-extrabold tracking-widest text-stripe-slate mt-1">
+                            Player Intelligence
                         </span>
                     </div>
                 </a>
@@ -849,11 +872,22 @@
     <footer class="bg-stripe-light border-t border-stripe-border py-12 text-xs text-stripe-slate">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-xl bg-stripe-indigo text-white flex items-center justify-center font-bold text-sm">
-                        O
+                <div class="flex items-center space-x-3 group">
+                    <div class="w-8 h-8 rounded-xl bg-white border border-slate-200/90 p-1 shadow-sm flex items-center justify-center shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                            <defs>
+                                <linearGradient id="ftOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="50%" stop-color="#635bff" />
+                                    <stop offset="100%" stop-color="#ff6080" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="32" stroke="url(#ftOrbitGrad)" stroke-width="7.5" stroke-linecap="round" />
+                            <ellipse cx="50" cy="50" rx="44" ry="18" stroke="url(#ftOrbitGrad)" stroke-width="6" transform="rotate(-30 50 50)" stroke-linecap="round" />
+                            <path d="M 24 50 L 38 50 L 44 65 L 56 32 L 63 56 L 68 50 L 76 50" stroke="url(#ftOrbitGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
-                    <span class="text-base font-black text-stripe-navy">on-score.io</span>
+                    <span class="text-base font-black text-stripe-navy font-sans tracking-tight">on-score<span class="text-stripe-indigo">.io</span></span>
                 </div>
                 <div class="flex items-center space-x-6 font-bold text-stripe-navy">
                     <a href="/docs" class="hover:text-stripe-indigo transition">API Reference</a>

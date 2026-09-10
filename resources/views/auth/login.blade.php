@@ -6,8 +6,25 @@
 <div class="max-w-md mx-auto my-8">
     <div class="bg-white border border-slate-200 rounded-3xl p-8 card-shadow">
         <div class="text-center space-y-2 mb-6">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-indigo-600 flex items-center justify-center font-extrabold text-white text-2xl mx-auto shadow-md shadow-emerald-500/20">
-                O
+            <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200/90 p-1.5 shadow-md shadow-indigo-500/10 flex items-center justify-center mx-auto">
+                <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                    <defs>
+                        <linearGradient id="logOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d4ff" />
+                            <stop offset="35%" stop-color="#635bff" />
+                            <stop offset="70%" stop-color="#7a73ff" />
+                            <stop offset="100%" stop-color="#ff6080" />
+                        </linearGradient>
+                        <linearGradient id="logPulseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#00d4ff" />
+                            <stop offset="50%" stop-color="#635bff" />
+                            <stop offset="100%" stop-color="#ff6080" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="32" stroke="url(#logOrbitGrad)" stroke-width="7.5" stroke-linecap="round" />
+                    <ellipse cx="50" cy="50" rx="44" ry="18" stroke="url(#logOrbitGrad)" stroke-width="6" transform="rotate(-30 50 50)" stroke-linecap="round" />
+                    <path d="M 24 50 L 38 50 L 44 65 L 56 32 L 63 56 L 68 50 L 76 50" stroke="url(#logPulseGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
             </div>
             <h2 class="text-2xl font-black text-slate-900 tracking-tight">Sign In</h2>
             <p class="text-xs text-slate-500">Enter your credentials to access the admin & intelligence portal.</p>
