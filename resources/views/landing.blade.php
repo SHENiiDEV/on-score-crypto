@@ -184,7 +184,6 @@
                         <span class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-stripe-indigo/10 text-stripe-indigo">Interactive</span>
                     </a>
                     <a href="#developers" class="text-stripe-slate hover:text-stripe-navy transition">API & SDKs</a>
-                    <a href="#architecture" class="text-stripe-slate hover:text-stripe-navy transition">Entity Clusters</a>
                     <a href="/docs" class="text-stripe-slate hover:text-stripe-navy transition">API Docs</a>
                 </nav>
             </div>
