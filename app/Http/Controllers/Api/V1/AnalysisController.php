@@ -228,6 +228,7 @@ class AnalysisController extends Controller
                 'confidence' => $analysis->confidence,
                 'model_version' => $analysis->model_version,
             ],
+            'behavioral_patterns' => $snap?->behavioral_patterns ?? [],
             'warnings' => $snap?->warnings ?? [],
             'data_quality' => [
                 'status' => $analysis->status === 'completed' ? 'complete' : 'partial',

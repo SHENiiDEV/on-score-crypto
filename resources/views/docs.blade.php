@@ -113,8 +113,43 @@
         </div>
     </div>
 
+    <!-- Behavioral Intelligence Feature Callout -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-8 h-8 rounded-xl bg-indigo-50 text-[#635bff] border border-indigo-200 flex items-center justify-center font-bold text-base">🎯</span>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">New: Behavioral Pattern Engine &amp; Casino Footprint Payload</h3>
+                        <p class="text-xs text-slate-500">Every analysis response now returns structured behavioral heuristics and gambling telemetry.</p>
+                    </div>
+                </div>
+                <span class="chip bg-emerald-50 text-emerald-700 border-emerald-200 font-mono text-[10px] font-bold">API Payload v1.2</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                    <span class="font-bold text-slate-900 block font-mono">round_deposits</span>
+                    <p class="text-[11px] text-slate-500 mt-1">Percentage of round bet amounts ($50, $100, $500) and Shannon bet sizing entropy.</p>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                    <span class="font-bold text-slate-900 block font-mono">martingale_chasing</span>
+                    <p class="text-[11px] text-slate-500 mt-1">Detection of escalating loss-chasing doubling sequences (&lt;3h) with tilt risk level.</p>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                    <span class="font-bold text-slate-900 block font-mono">session_activity</span>
+                    <p class="text-[11px] text-slate-500 mt-1">24-hour UTC distribution array (0..23h), night activity index (22:00-06:00), and weekend share.</p>
+                </div>
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                    <span class="font-bold text-slate-900 block font-mono">unlabeled_casino_heuristics</span>
+                    <p class="text-[11px] text-slate-500 mt-1">Heuristic identification of ephemeral casino deposit sweepers &amp; forwarding proxies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Swagger UI Interactive Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div id="swagger-ui"></div>
     </main>
 

@@ -571,7 +571,166 @@
                         <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">score.segment</span>
                         <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">financial_profile.visible_balance_usd</span>
                         <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-stripe-navy">gambling_intelligence.entities_count</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 shadow-sm font-bold text-[#635bff]">behavioral_patterns</span>
                     </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4.5 BEHAVIORAL FOOTPRINT & PATTERN ENGINE  -->
+    <!-- ========================================== -->
+    <section id="behavioral" class="py-24 bg-gradient-to-b from-white via-slate-50/50 to-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <div class="max-w-2xl space-y-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-stripe-indigo">
+                        ON-CHAIN BEHAVIORAL AI &amp; CASINO FOOTPRINT
+                    </span>
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-stripe-navy tracking-tight leading-tight">
+                        Uncover hidden player habits, bet clustering, and Martingale sequences.
+                    </h2>
+                    <p class="text-base sm:text-lg text-stripe-slate leading-relaxed">
+                        Even when casino addresses are unlisted, On-Score identifies unmistakable gambling telemetry: round deposit sizing, 24-hour night burst frequency, and loss-chasing doubling progressions.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-indigo-50 text-[#635bff] border border-indigo-200 flex items-center space-x-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#635bff] animate-pulse"></span>
+                        <span>Round Sizing &amp; Entropy</span>
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                        ⚡ Martingale Tilt Tracker
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-purple-50 text-purple-700 border border-purple-200">
+                        🌙 24h Activity Heatmap
+                    </span>
+                </div>
+            </div>
+
+            <!-- Behavioral Intelligence Showcase Matrix -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                
+                <!-- Left: 24h Activity Heatmap & Burst Sessions Card -->
+                <div class="lg:col-span-7 stripe-card p-8 sm:p-10 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-stripe-muted">TEMPORAL PROFILE</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-purple-50 text-purple-800 border border-purple-200">
+                                64.2% Night-Owl Index
+                            </span>
+                        </div>
+                        <h3 class="text-2xl font-black text-stripe-navy">
+                            24-Hour Activity Heatmap &amp; Burst Sessions
+                        </h3>
+                        <p class="text-sm text-stripe-slate leading-relaxed">
+                            DeFi traders act during market hours; gamblers play in nocturnal bursts. On-Score clusters transactions into rapid sessions (&lt;45 min gaps) and generates a 24-hour UTC histogram.
+                        </p>
+                    </div>
+
+                    <!-- 24-Hour Interactive Bar Mockup -->
+                    <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-5 space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-stripe-navy">UTC Activity Distribution (00:00 &rarr; 23:00)</span>
+                            <span class="text-xs font-mono font-bold text-stripe-indigo">Peak: 23:00 UTC (12 txs)</span>
+                        </div>
+
+                        <!-- 24 bars grid -->
+                        <div class="gap-1 items-end h-24 pt-4 px-1" style="display: grid; grid-template-columns: repeat(24, minmax(0, 1fr));">
+                            @php
+                                $sampleHourly = [1, 2, 4, 6, 3, 1, 0, 0, 1, 2, 1, 3, 2, 4, 5, 4, 6, 8, 9, 11, 14, 18, 22, 26];
+                                $maxSample = max($sampleHourly);
+                            @endphp
+                            @foreach($sampleHourly as $h => $cnt)
+                                @php
+                                    $hPct = round(($cnt / $maxSample) * 100);
+                                    $isNight = ($h >= 22 || $h < 6);
+                                @endphp
+                                <div class="flex flex-col items-center h-full justify-end group relative">
+                                    <div class="w-full rounded-t-sm transition-all duration-300 {{ $isNight ? 'bg-[#635bff] hover:bg-[#5851ea]' : 'bg-slate-700 hover:bg-slate-900' }}"
+                                         style="height: {{ max(10, $hPct) }}%"></div>
+                                    <span class="text-[8px] font-mono text-slate-400 mt-1 {{ $h % 4 === 0 ? 'block' : 'hidden sm:block' }}">
+                                        {{ sprintf('%02d', $h) }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200 text-[11px] text-slate-500 font-medium">
+                            <span class="flex items-center space-x-1.5">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-[#635bff]"></span>
+                                <span>Night Hours (22:00–06:00 UTC)</span>
+                            </span>
+                            <span class="flex items-center space-x-1.5">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-slate-700"></span>
+                                <span>Daytime Baseline</span>
+                            </span>
+                            <span class="font-mono font-bold text-stripe-navy">Weekend: 71.0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Round Bet Clustering & Martingale Progression -->
+                <div class="lg:col-span-5 space-y-6 flex flex-col justify-between">
+                    
+                    <!-- Round Bet Sizing & Shannon Entropy Tile -->
+                    <div class="stripe-card p-7 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center font-black text-lg">
+                                🎯
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-black bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                85.5% Round Sizing
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-black text-stripe-navy">
+                            Fixed Bet Clusters &amp; Sizing Entropy
+                        </h4>
+                        <p class="text-xs text-stripe-slate leading-relaxed">
+                            Natural P2P transfers are fractional ($134.72); casino deposits are 90%+ round integers ($50, $100, $500). Shannon entropy analysis reveals robotic betting consistency.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs font-bold text-stripe-navy flex items-center space-x-1.5 shadow-sm">
+                                <span class="text-emerald-600 font-black">$100</span>
+                                <span class="text-slate-400">&times; 14 txs</span>
+                            </span>
+                            <span class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs font-bold text-stripe-navy flex items-center space-x-1.5 shadow-sm">
+                                <span class="text-emerald-600 font-black">$200</span>
+                                <span class="text-slate-400">&times; 6 txs</span>
+                            </span>
+                            <span class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs font-bold text-stripe-navy flex items-center space-x-1.5 shadow-sm">
+                                <span class="text-emerald-600 font-black">$500</span>
+                                <span class="text-slate-400">&times; 3 txs</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Martingale & Chasing Loss Sequence Tile -->
+                    <div class="stripe-card p-7 space-y-4 bg-gradient-to-br from-white to-rose-50/40 border-rose-200/80">
+                        <div class="flex items-center justify-between">
+                            <div class="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center font-black text-lg">
+                                🚨
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">
+                                High Tilt Risk (4.5x Peak)
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-black text-stripe-navy">
+                            Martingale Loss-Chasing Detector
+                        </h4>
+                        <p class="text-xs text-stripe-slate leading-relaxed">
+                            Identifies aggressive doubling sequences within short intervals (&lt;3 hours): $100 &rarr; $200 &rarr; $450, signalling active tilt, rapid reloads, and high urgency.
+                        </p>
+                        <div class="p-3 bg-white border border-rose-200 rounded-xl font-mono text-xs text-rose-900 font-bold flex justify-between items-center">
+                            <span>$100 &rarr; $200 &rarr; $450 (42 mins)</span>
+                            <span class="text-[10px] uppercase bg-rose-50 text-rose-700 px-2 py-0.5 rounded border border-rose-200">Escalation Chain</span>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -938,6 +1097,15 @@
                         is_gambler: true,
                         entities_count: 8,
                         total_flow_365d_usd: 1420000
+                    },
+                    behavioral_patterns: {
+                        whale_potential_score: 95,
+                        churn_risk: "low",
+                        behavioral_tags: ["HIGH_ROLLER_BURSTS", "FIXED_ROUND_STAKES", "NOCTURNAL_VIP"],
+                        round_deposits: { detected: true, round_ratio: 0.88, top_denominations: [500, 1000, 2500] },
+                        martingale_chasing: { detected: false, max_streak: 1, multiplier_estimate: null },
+                        session_activity: { peak_utc_hour: 23, peak_day: "Saturday", nocturnal_burst_ratio: 0.72 },
+                        velocity_cycles: { deposits_per_hour_burst: 3.2, avg_deposit_velocity_minutes: 18 }
                     }
                 }
             },
@@ -968,6 +1136,15 @@
                         is_gambler: true,
                         entities_count: 4,
                         total_flow_365d_usd: 240000
+                    },
+                    behavioral_patterns: {
+                        whale_potential_score: 82,
+                        churn_risk: "moderate",
+                        behavioral_tags: ["MARTINGALE_TILT", "ROUND_DENOMINATIONS", "NOCTURNAL_PLAYER"],
+                        round_deposits: { detected: true, round_ratio: 0.92, top_denominations: [100, 200, 500] },
+                        martingale_chasing: { detected: true, max_streak: 4, multiplier_estimate: 2.05, status: "TILT_DETECTED" },
+                        session_activity: { peak_utc_hour: 2, peak_day: "Friday", nocturnal_burst_ratio: 0.65 },
+                        velocity_cycles: { deposits_per_hour_burst: 4.8, avg_deposit_velocity_minutes: 12 }
                     }
                 }
             },
@@ -998,6 +1175,15 @@
                         is_gambler: true,
                         entities_count: 11,
                         total_flow_365d_usd: 18400
+                    },
+                    behavioral_patterns: {
+                        whale_potential_score: 18,
+                        churn_risk: "high",
+                        behavioral_tags: ["RAPID_MICRO_SWEEPS", "LOW_RETENTION"],
+                        round_deposits: { detected: false, round_ratio: 0.21, top_denominations: [10, 25] },
+                        martingale_chasing: { detected: false, max_streak: 0, multiplier_estimate: null },
+                        session_activity: { peak_utc_hour: 14, peak_day: "Tuesday", nocturnal_burst_ratio: 0.15 },
+                        velocity_cycles: { deposits_per_hour_burst: 1.1, avg_deposit_velocity_minutes: 55 }
                     }
                 }
             },
@@ -1028,6 +1214,15 @@
                         is_gambler: false,
                         entities_count: 0,
                         total_flow_365d_usd: 0
+                    },
+                    behavioral_patterns: {
+                        whale_potential_score: 5,
+                        churn_risk: "immediate",
+                        behavioral_tags: ["MIXER_INTERACTION", "HIGH_RISK_HOP"],
+                        round_deposits: { detected: false, round_ratio: 0.05, top_denominations: [] },
+                        martingale_chasing: { detected: false, max_streak: 0, multiplier_estimate: null },
+                        session_activity: { peak_utc_hour: 4, peak_day: "Monday", nocturnal_burst_ratio: 0.8 },
+                        velocity_cycles: { deposits_per_hour_burst: 0.2, avg_deposit_velocity_minutes: 120 }
                     }
                 }
             }

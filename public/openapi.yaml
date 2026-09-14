@@ -345,6 +345,102 @@ components:
             total_flow_365d_usd:
               type: number
               example: 48200.00
+        behavioral_patterns:
+          type: object
+          properties:
+            round_deposits:
+              type: object
+              properties:
+                round_percentage:
+                  type: number
+                  example: 85.5
+                is_fixed_amount_depositor:
+                  type: boolean
+                  example: true
+                top_recurring_amounts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      amount_usd:
+                        type: number
+                        example: 100
+                      count:
+                        type: integer
+                        example: 14
+                      total_volume_usd:
+                        type: number
+                        example: 1400
+                amount_entropy:
+                  type: number
+                  example: 0.18
+            martingale_chasing:
+              type: object
+              properties:
+                detected:
+                  type: boolean
+                  example: true
+                max_multiplier:
+                  type: number
+                  example: 4.5
+                tilt_risk_level:
+                  type: string
+                  enum: [LOW, MEDIUM, HIGH, CRITICAL]
+                  example: HIGH
+                sequences:
+                  type: array
+                  items:
+                    type: object
+            session_activity:
+              type: object
+              properties:
+                hourly_distribution:
+                  type: array
+                  items:
+                    type: integer
+                  description: 24-element array (0..23 UTC) representing transaction counts per hour
+                night_activity_percentage:
+                  type: number
+                  example: 64.2
+                weekend_activity_percentage:
+                  type: number
+                  example: 71.0
+                peak_activity_hour:
+                  type: integer
+                  example: 23
+                total_sessions_count:
+                  type: integer
+                  example: 12
+            velocity_cycles:
+              type: object
+              properties:
+                fast_reload_count:
+                  type: integer
+                  example: 3
+                cashout_cycles_count:
+                  type: integer
+                  example: 5
+            unlabeled_casino_heuristics:
+              type: object
+              properties:
+                unlabeled_casino_score:
+                  type: integer
+                  example: 80
+                detected_proxy_count:
+                  type: integer
+                  example: 2
+            behavioral_tags:
+              type: array
+              items:
+                type: string
+              example: ["RECURRENT_ROUND_DEPOSITOR", "MARTINGALE_CHASING_PATTERN", "NIGHT_OWL_GAMBLER"]
+            whale_potential_score:
+              type: integer
+              example: 92
+            churn_risk:
+              type: string
+              enum: [LOW, MEDIUM, HIGH]
+              example: LOW
 
     AnalysisSummary:
       type: object
