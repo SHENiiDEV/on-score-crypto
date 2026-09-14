@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('console.layout')
 
-@section('title', 'Player Intelligence Report — ' . $analysis->address)
+@section('title', 'Player Intelligence Profile — ' . $analysis->address)
 
 @section('content')
 @php
@@ -15,39 +15,52 @@
     $counterparties = $snapshot->counterparties ?? [];
     $isCex = $snapshot->wallet_overview['is_custodial_cex'] ?? false;
     $warnings = $snapshot->warnings ?? [];
-
-    $segmentBadgeClass = match($segment) {
-        'super_vip' => 'bg-purple-100 text-purple-900 border-purple-300 ring-2 ring-purple-500/30',
-        'potential_vip' => 'bg-amber-100 text-amber-900 border-amber-300 ring-2 ring-amber-400/20',
-        'high_value' => 'bg-emerald-100 text-emerald-900 border-emerald-300 ring-2 ring-emerald-400/20',
-        'good_player' => 'bg-blue-100 text-blue-900 border-blue-300',
-        'regular' => 'bg-slate-100 text-slate-800 border-slate-300',
-        default => 'bg-rose-100 text-rose-900 border-rose-300',
-    };
+    $behavioral = $snapshot->behavioral_patterns ?? [];
+    $round = $behavioral['round_deposits'] ?? [];
+    $martingale = $behavioral['martingale_chasing'] ?? [];
+    $session = $behavioral['session_activity'] ?? [];
+    $velocity = $behavioral['velocity_cycles'] ?? [];
+    $unlabeled = $behavioral['unlabeled_casino_heuristics'] ?? [];
+    $bTags = $behavioral['behavioral_tags'] ?? [];
+    $whaleScore = $behavioral['whale_potential_score'] ?? null;
+    $hourly = $session['hourly_distribution'] ?? array_fill(0, 24, 0);
+    $maxHourly = max(1, max($hourly));
 @endphp
 
-<div class="space-y-8">
-    <!-- Header Navigation -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="space-y-6 pb-12">
+    
+    <!-- Header Navigation & Breadcrumbs -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
         <div>
-            <div class="flex items-center space-x-3">
-                @php $rp_back = (auth()->check() && !auth()->user()->isAdmin()) ? route('merchant.usage') : route('dashboard'); @endphp
-                <a href="{{ $rp_back }}" class="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center space-x-1">
-                    <span>&larr; Back to Dashboard</span>
-                </a>
-                <span class="text-slate-300">/</span>
-                <span class="text-xs text-slate-400 font-mono">Analysis ID: {{ $analysis->id }}</span>
+            <div class="flex items-center space-x-2 text-xs font-bold text-slate-400 mb-1">
+                @php 
+                    $backUrl = (auth()->check() && !auth()->user()->isAdmin()) ? route('merchant.usage') : route('admin.analyses'); 
+                    $backLabel = (auth()->check() && !auth()->user()->isAdmin()) ? 'Merchant Usage' : 'Analyses';
+                @endphp
+                <a href="{{ $backUrl }}" class="hover:text-iris-500 transition">&larr; {{ $backLabel }}</a>
+                <span>/</span>
+                <span class="text-iris-500 font-extrabold">Report {{ substr($analysis->id, 0, 10) }}...</span>
+                <span class="chip bg-emerald-50 text-emerald-700 border-emerald-200 font-mono text-[10px]">
+                    {{ strtoupper($analysis->status) }}
+                </span>
             </div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight mt-1 flex items-center space-x-3">
+            <h1 class="text-2xl sm:text-3xl font-black text-ink tracking-tight flex items-center space-x-2.5">
                 <span>Player On-Chain Intelligence Profile</span>
             </h1>
+            <p class="text-xs text-slate-500 mt-1 font-mono font-medium">
+                Wallet: <strong class="text-ink select-all">{{ $analysis->address }}</strong> ({{ strtoupper($analysis->network) }})
+                @if($analysis->external_player_id)
+                    • Player ID: <strong class="text-ink font-sans">{{ $analysis->external_player_id }}</strong>
+                @endif
+            </p>
         </div>
 
         <div class="flex items-center space-x-3">
-            <span class="text-xs text-slate-500">Evaluated at: <strong class="text-slate-900">{{ $analysis->created_at->format('Y-m-d H:i:s UTC') }}</strong></span>
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-mono font-bold">
-                {{ strtoupper($analysis->status) }}
-            </span>
+            <span class="text-xs text-slate-500">Evaluated: <strong class="text-ink font-mono">{{ $analysis->created_at->format('Y-m-d H:i:s UTC') }}</strong></span>
+            <a href="{{ route('dashboard') }}" class="btn btn-ghost text-xs">
+                <span>New Analysis</span>
+                <span>&rarr;</span>
+            </a>
         </div>
     </div>
 
@@ -59,22 +72,32 @@
                 <span>Custodial CEX Pool Detected — Collective Balance Isolation Active</span>
             </div>
             <p class="text-xs text-amber-900 leading-relaxed font-medium">
-                This wallet is identified as a <strong>custodial exchange hot wallet or deposit sweeper pool (Bybit/Binance)</strong>. On-Score deliberately isolates exchange pool balances to avoid erroneously attributing hundreds of millions in collective exchange funds to a single player.
+                This wallet is identified as a <strong>custodial exchange hot wallet or deposit sweeper pool (Bybit/Binance/OKX)</strong>. On-Score deliberately isolates exchange pool balances to avoid erroneously attributing collective exchange funds to a single player.
             </p>
         </div>
     @endif
 
     <!-- Main Score & Intelligence Hero Card -->
-    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 card-shadow">
+    <div class="surface p-6 sm:p-8 relative overflow-hidden">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <!-- Score Dial -->
-            <div class="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">On-Score Player Index</div>
+            <div class="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                <div class="kpi-label mb-2">On-Score Player Index</div>
                 <div class="relative flex items-center justify-center my-2">
-                    <div class="text-6xl font-black font-mono tracking-tight text-slate-900">{{ $scoreVal }}</div>
+                    <div class="text-6xl font-black font-mono tracking-tight text-ink">{{ $scoreVal }}</div>
                     <span class="text-xl font-bold text-slate-400 ml-1">/100</span>
                 </div>
                 <div class="mt-2">
+                    @php
+                        $segmentBadgeClass = match($segment) {
+                            'super_vip' => 'bg-purple-100 text-purple-900 border-purple-300 ring-2 ring-purple-500/20',
+                            'potential_vip' => 'bg-amber-100 text-amber-900 border-amber-300 ring-2 ring-amber-400/20',
+                            'high_value' => 'bg-emerald-100 text-emerald-900 border-emerald-300 ring-2 ring-emerald-400/20',
+                            'good_player' => 'bg-sky-100 text-sky-900 border-sky-300',
+                            'regular' => 'bg-slate-100 text-slate-800 border-slate-300',
+                            default => 'bg-rose-100 text-rose-900 border-rose-300',
+                        };
+                    @endphp
                     <span class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border {{ $segmentBadgeClass }}">
                         {{ strtoupper(str_replace('_', ' ', $segment)) }}
                     </span>
@@ -87,10 +110,10 @@
             <!-- Key Drivers & Subscores -->
             <div class="lg:col-span-8 space-y-5">
                 <div>
-                    <div class="text-xs font-bold text-slate-500 uppercase mb-2">Key Drivers & Explainability</div>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="kpi-label mb-2">Key Drivers &amp; Explainability</div>
+                    <div class="flex flex-wrap gap-1.5">
                         @forelse($keyDrivers as $driver)
-                            <span class="px-3 py-1 bg-slate-100 border border-slate-200 text-slate-800 text-xs font-mono font-bold rounded-lg flex items-center space-x-1.5">
+                            <span class="px-2.5 py-1 bg-slate-100 border border-slate-200 text-ink text-xs font-mono font-bold rounded-lg flex items-center space-x-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                 <span>{{ $driver }}</span>
                             </span>
@@ -101,44 +124,44 @@
                 </div>
 
                 <!-- Subscores Breakdown Bars -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                         <div class="flex justify-between text-xs mb-1">
                             <span class="text-slate-600 font-bold">Financial Capacity (35%)</span>
-                            <span class="text-slate-900 font-black font-mono">{{ $subscores['financial_capacity'] ?? 0 }}/100</span>
+                            <span class="text-ink font-black font-mono">{{ $subscores['financial_capacity'] ?? 0 }}/100</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2">
-                            <div class="bg-emerald-600 h-2 rounded-full" style="width: {{ $subscores['financial_capacity'] ?? 0 }}%"></div>
+                            <div class="bg-emerald-600 h-2 rounded-full transition-all" style="width: {{ $subscores['financial_capacity'] ?? 0 }}%"></div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                         <div class="flex justify-between text-xs mb-1">
                             <span class="text-slate-600 font-bold">Gambling Activity (35%)</span>
-                            <span class="text-slate-900 font-black font-mono">{{ $subscores['gambling_activity'] ?? 0 }}/100</span>
+                            <span class="text-ink font-black font-mono">{{ $subscores['gambling_activity'] ?? 0 }}/100</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2">
-                            <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ $subscores['gambling_activity'] ?? 0 }}%"></div>
+                            <div class="bg-iris-500 h-2 rounded-full transition-all" style="width: {{ $subscores['gambling_activity'] ?? 0 }}%"></div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                         <div class="flex justify-between text-xs mb-1">
                             <span class="text-slate-600 font-bold">Activity Recency (15%)</span>
-                            <span class="text-slate-900 font-black font-mono">{{ $subscores['activity_recency'] ?? 0 }}/100</span>
+                            <span class="text-ink font-black font-mono">{{ $subscores['activity_recency'] ?? 0 }}/100</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2">
-                            <div class="bg-amber-500 h-2 rounded-full" style="width: {{ $subscores['activity_recency'] ?? 0 }}%"></div>
+                            <div class="bg-amber-500 h-2 rounded-full transition-all" style="width: {{ $subscores['activity_recency'] ?? 0 }}%"></div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
                         <div class="flex justify-between text-xs mb-1">
                             <span class="text-slate-600 font-bold">Transaction Profile (15%)</span>
-                            <span class="text-slate-900 font-black font-mono">{{ $subscores['transaction_profile'] ?? 0 }}/100</span>
+                            <span class="text-ink font-black font-mono">{{ $subscores['transaction_profile'] ?? 0 }}/100</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2">
-                            <div class="bg-purple-600 h-2 rounded-full" style="width: {{ $subscores['transaction_profile'] ?? 0 }}%"></div>
+                            <div class="bg-purple-600 h-2 rounded-full transition-all" style="width: {{ $subscores['transaction_profile'] ?? 0 }}%"></div>
                         </div>
                     </div>
                 </div>
@@ -146,120 +169,17 @@
         </div>
     </div>
 
-    <!-- Details Grid: Financials & Gambling History -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- 1. Balance & Turnover -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 card-shadow">
-            <h3 class="text-base font-extrabold text-slate-900 flex items-center space-x-2">
-                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Financial Capacity & Liquidity</span>
-            </h3>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div class="text-[11px] text-slate-500 uppercase font-bold">Visible Assets (USD)</div>
-                    <div class="text-2xl font-black text-emerald-700 font-mono mt-1">${{ number_format($balance['visible_balance_usd'] ?? 0) }}</div>
-                    <div class="text-[10px] text-slate-400 mt-1">Non-CEX liquid balance</div>
-                </div>
-
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div class="text-[11px] text-slate-500 uppercase font-bold">365d Total Turnover</div>
-                    <div class="text-2xl font-black text-slate-900 font-mono mt-1">${{ number_format($turnover['365d_usd'] ?? 0) }}</div>
-                    <div class="text-[10px] text-slate-400 mt-1">Cumulative movements</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">30d Turnover:</span>
-                    <span class="text-slate-900 font-mono font-bold">${{ number_format($turnover['30d_usd'] ?? 0) }}</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">90d Turnover:</span>
-                    <span class="text-slate-900 font-mono font-bold">${{ number_format($turnover['90d_usd'] ?? 0) }}</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">Lifetime Turnover:</span>
-                    <span class="text-slate-900 font-mono font-bold">${{ number_format($turnover['lifetime_usd'] ?? 0) }}</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span class="text-slate-600 font-medium">Inflow / Outflow (365d):</span>
-                    <span class="text-slate-900 font-mono font-bold">
-                        <span class="text-emerald-700">+${{ number_format($turnover['inflow_365d_usd'] ?? 0) }}</span> / 
-                        <span class="text-rose-700">-${{ number_format($turnover['outflow_365d_usd'] ?? 0) }}</span>
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. Gambling Intelligence Vertical -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 card-shadow">
-            <h3 class="text-base font-extrabold text-slate-900 flex items-center space-x-2">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Gambling Intelligence Vertical</span>
-            </h3>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div class="text-[11px] text-slate-500 uppercase font-bold">Gambling Flow (365d)</div>
-                    <div class="text-2xl font-black text-indigo-700 font-mono mt-1">${{ number_format($gambling['total_flow_365d_usd'] ?? 0) }}</div>
-                    <div class="text-[10px] text-slate-400 mt-1">Deposits: ${{ number_format($gambling['outgoing_365d_usd'] ?? 0) }}</div>
-                </div>
-
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div class="text-[11px] text-slate-500 uppercase font-bold">Known Gambling Brands</div>
-                    <div class="text-2xl font-black text-slate-900 font-mono mt-1">{{ $gambling['entities_count'] ?? 0 }}</div>
-                    <div class="text-[10px] text-slate-500 font-medium mt-1">{{ implode(', ', $gambling['entities_list'] ?? []) ?: 'None detected' }}</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">Gambling Status:</span>
-                    <span class="font-bold uppercase {{ ($gambling['status'] ?? '') === 'detected' ? 'text-emerald-700' : 'text-slate-500' }}">
-                        {{ $gambling['status'] ?? 'N/A' }}
-                    </span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">Gambling Share of Turnover:</span>
-                    <span class="text-slate-900 font-mono font-bold">{{ (($gambling['gambling_share_of_turnover'] ?? 0) * 100) }}%</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-200">
-                    <span class="text-slate-600 font-medium">Last Gambling Activity:</span>
-                    <span class="text-slate-900 font-mono font-bold">{{ $gambling['last_gambling_activity'] ? Carbon\Carbon::parse($gambling['last_gambling_activity'])->diffForHumans() : '—' }}</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span class="text-slate-600 font-medium">First Gambling Activity:</span>
-                    <span class="text-slate-900 font-mono font-bold">{{ $gambling['first_gambling_activity'] ? Carbon\Carbon::parse($gambling['first_gambling_activity'])->format('Y-m-d') : '—' }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Behavioral Patterns & Casino Footprint Intelligence (Advanced Analytics) -->
-    @php
-        $behavioral = $snapshot->behavioral_patterns ?? [];
-        $round = $behavioral['round_deposits'] ?? [];
-        $martingale = $behavioral['martingale_chasing'] ?? [];
-        $session = $behavioral['session_activity'] ?? [];
-        $velocity = $behavioral['velocity_cycles'] ?? [];
-        $unlabeled = $behavioral['unlabeled_casino_heuristics'] ?? [];
-        $bTags = $behavioral['behavioral_tags'] ?? [];
-        $whaleScore = $behavioral['whale_potential_score'] ?? null;
-        $hourly = $session['hourly_distribution'] ?? array_fill(0, 24, 0);
-        $maxHourly = max(1, max($hourly));
-    @endphp
-
-    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 card-shadow">
+    <!-- Behavioral Patterns & Casino Footprint Intelligence -->
+    <div class="surface p-6 sm:p-8 space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
             <div>
                 <div class="flex items-center space-x-2">
                     <span class="text-xl">🎯</span>
-                    <h3 class="text-lg font-black text-[#0a2540] tracking-tight">
-                        Behavioral Analytics & Casino Footprint
+                    <h3 class="text-lg font-black text-ink tracking-tight">
+                        Behavioral Analytics &amp; Casino Footprint
                     </h3>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-50 text-[#635bff] border border-indigo-200 uppercase">
-                        AI Pattern Engine
+                    <span class="chip bg-iris-50 text-iris-500 border-iris-300 uppercase">
+                        Pattern AI Engine
                     </span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">
@@ -270,7 +190,7 @@
             <!-- Behavioral Tags -->
             <div class="flex flex-wrap gap-1.5">
                 @forelse($bTags as $btag)
-                    <span class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-[#635bff] font-extrabold text-[11px] font-mono flex items-center space-x-1 shadow-sm">
+                    <span class="px-2.5 py-1 rounded-lg bg-iris-50 border border-iris-300 text-iris-500 font-extrabold text-[11px] font-mono flex items-center space-x-1 shadow-sm">
                         <span>⚡</span>
                         <span>{{ $btag }}</span>
                     </span>
@@ -283,23 +203,23 @@
         <!-- 4-Stat Strip for Behavioral Heuristics -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Round Denominations -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-extrabold uppercase text-slate-400">Round Deposits</span>
-                    <span class="w-2 h-2 rounded-full {{ ($round['is_fixed_amount_depositor'] ?? false) ? 'bg-indigo-500' : 'bg-slate-300' }}"></span>
+                    <span class="kpi-label">Round Deposits</span>
+                    <span class="w-2 h-2 rounded-full {{ ($round['is_fixed_amount_depositor'] ?? false) ? 'bg-iris-500' : 'bg-slate-300' }}"></span>
                 </div>
-                <div class="text-2xl font-black text-[#0a2540] font-mono mt-1">
+                <div class="text-2xl font-black text-ink font-mono mt-1">
                     {{ $round['round_percentage'] ?? 0 }}%
                 </div>
-                <div class="text-[11px] text-slate-500 mt-1">
+                <div class="text-[11px] text-slate-500 mt-0.5">
                     {{ $round['round_count'] ?? 0 }} of {{ $round['total_analyzed'] ?? 0 }} txs are round
                 </div>
             </div>
 
             <!-- Martingale / Tilt -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-extrabold uppercase text-slate-400">Martingale Tilt Risk</span>
+                    <span class="kpi-label">Martingale Tilt Risk</span>
                     <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase {{ ($martingale['tilt_risk_level'] ?? 'LOW') === 'CRITICAL' ? 'bg-rose-100 text-rose-800' : (($martingale['tilt_risk_level'] ?? 'LOW') === 'HIGH' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800') }}">
                         {{ $martingale['tilt_risk_level'] ?? 'LOW' }}
                     </span>
@@ -307,53 +227,53 @@
                 <div class="text-2xl font-black font-mono mt-1 {{ ($martingale['detected'] ?? false) ? 'text-rose-600' : 'text-slate-800' }}">
                     {{ ($martingale['detected'] ?? false) ? ($martingale['max_multiplier'] . 'x Peak') : 'Clean' }}
                 </div>
-                <div class="text-[11px] text-slate-500 mt-1">
+                <div class="text-[11px] text-slate-500 mt-0.5">
                     {{ ($martingale['detected'] ?? false) ? ($martingale['sequence_count'] . ' escalating sequence(s)') : 'No loss-chasing chains' }}
                 </div>
             </div>
 
             <!-- Night & Weekend Index -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-extrabold uppercase text-slate-400">Night Activity</span>
+                    <span class="kpi-label">Night Activity</span>
                     <span class="text-xs">🌙</span>
                 </div>
-                <div class="text-2xl font-black text-[#0a2540] font-mono mt-1">
+                <div class="text-2xl font-black text-ink font-mono mt-1">
                     {{ $session['night_activity_percentage'] ?? 0 }}%
                 </div>
-                <div class="text-[11px] text-slate-500 mt-1">
+                <div class="text-[11px] text-slate-500 mt-0.5">
                     Weekend share: <strong class="text-slate-700">{{ $session['weekend_activity_percentage'] ?? 0 }}%</strong>
                 </div>
             </div>
 
             <!-- Whale Potential -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-extrabold uppercase text-slate-400">Whale Potential</span>
+                    <span class="kpi-label">Whale Potential</span>
                     <span class="text-xs">👑</span>
                 </div>
                 <div class="text-2xl font-black text-emerald-700 font-mono mt-1">
                     {{ $whaleScore ?? 0 }}/100
                 </div>
-                <div class="text-[11px] text-slate-500 mt-1">
+                <div class="text-[11px] text-slate-500 mt-0.5">
                     Churn Risk: <strong class="{{ ($behavioral['churn_risk'] ?? 'LOW') === 'HIGH' ? 'text-rose-600' : 'text-emerald-700' }}">{{ $behavioral['churn_risk'] ?? 'LOW' }}</strong>
                 </div>
             </div>
         </div>
 
         <!-- 24-Hour Activity Heatmap / Bar Distribution -->
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <div>
-                    <h4 class="text-xs font-black uppercase text-[#0a2540] tracking-wider flex items-center space-x-2">
+                    <h4 class="text-xs font-black uppercase text-ink tracking-wider flex items-center space-x-2">
                         <span>24-Hour Activity Heatmap (UTC Distribution)</span>
                     </h4>
                     <p class="text-[11px] text-slate-500">
-                        Peak gaming hour: <strong class="text-[#635bff] font-mono">{{ sprintf('%02d:00 UTC', $session['peak_activity_hour'] ?? 0) }}</strong> • Night hours (22:00–06:00) highlighted in indigo.
+                        Peak gaming hour: <strong class="text-iris-500 font-mono">{{ sprintf('%02d:00 UTC', $session['peak_activity_hour'] ?? 0) }}</strong> • Night hours (22:00–06:00) highlighted in indigo.
                     </p>
                 </div>
                 <div class="text-xs font-mono font-bold text-slate-500">
-                    Sessions: <strong class="text-slate-900">{{ $session['total_sessions_count'] ?? 0 }}</strong> (Max {{ $session['max_session_tx_count'] ?? 0 }} txs/session)
+                    Sessions: <strong class="text-ink">{{ $session['total_sessions_count'] ?? 0 }}</strong> (Max {{ $session['max_session_tx_count'] ?? 0 }} txs/session)
                 </div>
             </div>
 
@@ -366,7 +286,7 @@
                         $isNight = ($h >= 22 || $h < 6);
                     @endphp
                     <div class="flex flex-col items-center h-full justify-end group relative">
-                        <div class="w-full rounded-t-sm transition-all duration-300 {{ $cnt > 0 ? ($isNight ? 'bg-[#635bff] hover:bg-[#5851ea]' : 'bg-slate-700 hover:bg-slate-900') : 'bg-slate-200' }}"
+                        <div class="w-full rounded-t-sm transition-all duration-300 {{ $cnt > 0 ? ($isNight ? 'bg-iris-500 hover:bg-iris-700' : 'bg-slate-700 hover:bg-slate-900') : 'bg-slate-200' }}"
                              style="height: {{ $cnt > 0 ? $pctHeight : 8 }}%">
                         </div>
                         <span class="text-[9px] font-mono font-bold text-slate-400 mt-1 {{ $h % 3 === 0 ? 'block' : 'hidden sm:block' }}">
@@ -385,13 +305,13 @@
         <!-- Recurring Bet Clusters & Martingale Sequences Detail Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <!-- Recurring Amount Clusters -->
-            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-black uppercase text-[#0a2540] tracking-wider flex items-center space-x-1.5">
+                    <h4 class="text-xs font-black uppercase text-ink tracking-wider flex items-center space-x-1.5">
                         <span>Recurring Deposit / Bet Clusters</span>
                     </h4>
                     <span class="text-[10px] font-mono text-slate-500">
-                        Entropy: <strong class="text-slate-800">{{ $round['amount_entropy'] ?? 0 }}</strong> (0 = strict fixed sizing)
+                        Entropy: <strong class="text-ink">{{ $round['amount_entropy'] ?? 0 }}</strong> (0 = strict fixed sizing)
                     </span>
                 </div>
 
@@ -411,7 +331,7 @@
                                     </span>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-xs font-mono font-black text-slate-900">${{ number_format($cluster['total_volume_usd']) }}</span>
+                                    <span class="text-xs font-mono font-black text-ink">${{ number_format($cluster['total_volume_usd']) }}</span>
                                     <span class="text-[10px] text-slate-400 block font-mono">({{ $cPercentage }}% of total)</span>
                                 </div>
                             </div>
@@ -425,13 +345,13 @@
             </div>
 
             <!-- Martingale Sequences or Fast Reloads -->
-            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-black uppercase text-[#0a2540] tracking-wider flex items-center space-x-1.5">
-                        <span>Loss-Chasing Sequences & Reloads</span>
+                    <h4 class="text-xs font-black uppercase text-ink tracking-wider flex items-center space-x-1.5">
+                        <span>Loss-Chasing Sequences &amp; Reloads</span>
                     </h4>
                     <span class="text-[10px] font-mono text-slate-500">
-                        Fast reloads (&lt;15m): <strong class="text-slate-800">{{ $velocity['fast_reload_count'] ?? 0 }}</strong>
+                        Fast reloads (&lt;15m): <strong class="text-ink">{{ $velocity['fast_reload_count'] ?? 0 }}</strong>
                     </span>
                 </div>
 
@@ -468,10 +388,10 @@
                 <!-- Unlabeled Casino Sweeper Score -->
                 <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
                     <div>
-                        <span class="text-[11px] font-extrabold uppercase text-slate-400 block">Unlabeled Casino Footprint Index:</span>
-                        <span class="text-slate-600 text-[11px]">Forwarding proxies & round transfer destinations</span>
+                        <span class="kpi-label block">Unlabeled Casino Footprint Index:</span>
+                        <span class="text-slate-600 text-[11px]">Forwarding proxies &amp; round transfer destinations</span>
                     </div>
-                    <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold {{ ($unlabeled['unlabeled_casino_score'] ?? 0) >= 70 ? 'bg-indigo-100 text-[#635bff]' : 'bg-slate-100 text-slate-700' }}">
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold {{ ($unlabeled['unlabeled_casino_score'] ?? 0) >= 70 ? 'bg-iris-50 text-iris-500' : 'bg-slate-100 text-slate-700' }}">
                         {{ $unlabeled['unlabeled_casino_score'] ?? 0 }}/100
                     </span>
                 </div>
@@ -479,13 +399,103 @@
         </div>
     </div>
 
+    <!-- Details Grid: Financials & Gambling History -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- 1. Balance & Turnover -->
+        <div class="surface p-6 space-y-4">
+            <h3 class="text-sm font-extrabold text-ink flex items-center space-x-2">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Financial Capacity &amp; Liquidity</span>
+            </h3>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                    <div class="kpi-label">Visible Assets (USD)</div>
+                    <div class="text-2xl font-black text-emerald-700 font-mono mt-1">${{ number_format($balance['visible_balance_usd'] ?? 0) }}</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Non-CEX liquid balance</div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                    <div class="kpi-label">365d Total Turnover</div>
+                    <div class="text-2xl font-black text-ink font-mono mt-1">${{ number_format($turnover['365d_usd'] ?? 0) }}</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Cumulative movements</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-xs">
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">30d Turnover:</span>
+                    <span class="text-ink font-mono font-bold">${{ number_format($turnover['30d_usd'] ?? 0) }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">90d Turnover:</span>
+                    <span class="text-ink font-mono font-bold">${{ number_format($turnover['90d_usd'] ?? 0) }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">Lifetime Turnover:</span>
+                    <span class="text-ink font-mono font-bold">${{ number_format($turnover['lifetime_usd'] ?? 0) }}</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-600 font-medium">Inflow / Outflow (365d):</span>
+                    <span class="text-ink font-mono font-bold">
+                        <span class="text-emerald-700">+${{ number_format($turnover['inflow_365d_usd'] ?? 0) }}</span> / 
+                        <span class="text-rose-700">-${{ number_format($turnover['outflow_365d_usd'] ?? 0) }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Gambling Intelligence Vertical -->
+        <div class="surface p-6 space-y-4">
+            <h3 class="text-sm font-extrabold text-ink flex items-center space-x-2">
+                <svg class="w-4 h-4 text-iris-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Gambling Intelligence Vertical</span>
+            </h3>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                    <div class="kpi-label">Gambling Flow (365d)</div>
+                    <div class="text-2xl font-black text-iris-500 font-mono mt-1">${{ number_format($gambling['total_flow_365d_usd'] ?? 0) }}</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Deposits: ${{ number_format($gambling['outgoing_365d_usd'] ?? 0) }}</div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                    <div class="kpi-label">Known Gambling Brands</div>
+                    <div class="text-2xl font-black text-ink font-mono mt-1">{{ $gambling['entities_count'] ?? 0 }}</div>
+                    <div class="text-[10px] text-slate-500 font-medium mt-0.5 truncate">{{ implode(', ', $gambling['entities_list'] ?? []) ?: 'None detected' }}</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-xs">
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">Gambling Status:</span>
+                    <span class="font-bold uppercase {{ ($gambling['status'] ?? '') === 'detected' ? 'text-emerald-700' : 'text-slate-500' }}">
+                        {{ $gambling['status'] ?? 'N/A' }}
+                    </span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">Gambling Share of Turnover:</span>
+                    <span class="text-ink font-mono font-bold">{{ (($gambling['gambling_share_of_turnover'] ?? 0) * 100) }}%</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-600 font-medium">Last Gambling Activity:</span>
+                    <span class="text-ink font-mono font-bold">{{ $gambling['last_gambling_activity'] ? Carbon\Carbon::parse($gambling['last_gambling_activity'])->diffForHumans() : '—' }}</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-600 font-medium">First Gambling Activity:</span>
+                    <span class="text-ink font-mono font-bold">{{ $gambling['first_gambling_activity'] ? Carbon\Carbon::parse($gambling['first_gambling_activity'])->format('Y-m-d') : '—' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Counterparties Section -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 card-shadow">
-        <h3 class="text-base font-extrabold text-slate-900 mb-4">Attributed Counterparties & Protocols</h3>
+    <div class="surface p-6">
+        <h3 class="text-sm font-extrabold text-ink mb-3">Attributed Counterparties &amp; Protocols</h3>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
                 <thead>
-                    <tr class="border-b border-slate-200 text-slate-400 uppercase font-bold text-[10px]">
+                    <tr class="border-b border-slate-100 text-slate-400 uppercase font-bold text-[10px]">
                         <th class="py-2.5 px-3">Entity Name</th>
                         <th class="py-2.5 px-3">Category</th>
                         <th class="py-2.5 px-3">Confidence</th>
@@ -493,22 +503,22 @@
                         <th class="py-2.5 px-3 text-right">Attributed Volume</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                <tbody class="divide-y divide-slate-50 font-medium text-slate-700">
                     @forelse($counterparties as $cp)
                     <tr class="hover:bg-slate-50">
-                        <td class="py-3 px-3 font-extrabold text-slate-900">{{ $cp['name'] }}</td>
+                        <td class="py-3 px-3 font-extrabold text-ink">{{ $cp['name'] }}</td>
                         <td class="py-3 px-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold {{ $cp['category'] === 'gambling' ? 'bg-indigo-100 text-indigo-800' : ($cp['category'] === 'cex' ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-800') }}">
+                            <span class="chip uppercase {{ $cp['category'] === 'gambling' ? 'bg-indigo-50 text-indigo-800' : ($cp['category'] === 'cex' ? 'bg-purple-50 text-purple-800' : 'bg-slate-100 text-slate-800') }}">
                                 {{ $cp['category'] }}
                             </span>
                         </td>
                         <td class="py-3 px-3 font-mono font-bold text-emerald-700">{{ ($cp['confidence'] ?? 1.0) * 100 }}%</td>
                         <td class="py-3 px-3 text-slate-700 font-mono">{{ $cp['tx_count'] }}</td>
-                        <td class="py-3 px-3 text-right font-mono font-black text-slate-900">${{ number_format($cp['total_volume_usd']) }}</td>
+                        <td class="py-3 px-3 text-right font-mono font-black text-ink">${{ number_format($cp['total_volume_usd']) }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="py-4 text-center text-slate-400">No known counterparties detected from Entity DB.</td>
+                        <td colspan="5" class="py-6 text-center text-slate-400">No known counterparties detected from Entity DB.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -517,10 +527,10 @@
     </div>
 
     <!-- Raw JSON Inspector -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 card-shadow">
+    <div class="surface p-6">
         <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-extrabold text-slate-900 font-mono">Immutable Snapshot JSON (API Output)</h3>
-            <span class="text-xs text-slate-400 font-mono">Audit Ready</span>
+            <h3 class="text-xs font-extrabold text-ink font-mono uppercase tracking-wider">Immutable Snapshot JSON (API Output)</h3>
+            <span class="chip bg-slate-100 text-slate-600 font-mono">Audit Ready</span>
         </div>
         <pre class="bg-slate-900 rounded-xl p-4 text-xs font-mono text-emerald-400 overflow-x-auto max-h-80 shadow-inner">{{ json_encode($snapshot->toArray(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
     </div>
