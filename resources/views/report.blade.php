@@ -31,7 +31,8 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <div class="flex items-center space-x-3">
-                <a href="{{ route('dashboard') }}" class="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center space-x-1">
+                @php $rp_back = (auth()->check() && !auth()->user()->isAdmin()) ? route('merchant.usage') : route('dashboard'); @endphp
+                <a href="{{ $rp_back }}" class="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center space-x-1">
                     <span>&larr; Back to Dashboard</span>
                 </a>
                 <span class="text-slate-300">/</span>

@@ -82,7 +82,10 @@ class AuthenticateApiKey
             ], 403);
         }
 
-        $apiClient->update(['last_used_at' => now()]);
+        $apiClient->update([
+            'last_used_at' => now(),
+            'last_used_ip' => $request->ip(),
+        ]);
 
         $request->attributes->set('account', $apiClient->account);
         $request->attributes->set('api_client', $apiClient);

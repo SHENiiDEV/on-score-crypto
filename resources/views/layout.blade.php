@@ -48,12 +48,17 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white antialiased">
+@php
+    $ly_user = auth()->user();
+    $ly_isMerchant = $ly_user && !$ly_user->isAdmin();
+    $ly_home = $ly_isMerchant ? route('merchant.dashboard') : route('dashboard');
+@endphp
     <!-- Top Bar Navigation -->
     <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-6">
                 <!-- 2-Part Brand Logo -->
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 group">
+                <a href="{{ $ly_home }}" class="flex items-center space-x-3 group">
                     <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 p-1 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
                             <defs>
@@ -81,9 +86,12 @@
                 </a>
 
                 <nav class="hidden md:flex items-center space-x-1 pl-4 border-l border-slate-200">
-                    <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold {{ request()->routeIs('dashboard*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }} transition">
-                        Dashboard & Scoring
+                    <a href="{{ $ly_home }}" class="px-3 py-1.5 rounded-lg text-xs font-bold {{ request()->routeIs('dashboard*') || request()->routeIs('merchant.dashboard') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }} transition">
+                        {{ $ly_isMerchant ? 'Back to portal' : 'Dashboard & Scoring' }}
                     </a>
+                    @if($ly_isMerchant)
+                        <a href="{{ route('merchant.usage') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">Usage &amp; reports</a>
+                    @endif
                     @auth
                         @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50' }} transition flex items-center space-x-1">
@@ -105,6 +113,7 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span class="text-xs text-emerald-800 font-semibold">Credits:</span>
                     <span class="text-sm font-black text-emerald-900 font-mono">{{ number_format($account->credit_balance) }}</span>
+                    @if(!$ly_isMerchant)
                     <form action="{{ route('dashboard.topup') }}" method="POST" class="inline">
                         @csrf
                         <input type="hidden" name="amount" value="500">
@@ -112,6 +121,7 @@
                             +500
                         </button>
                     </form>
+                    @endif
                 </div>
                 @endif
 

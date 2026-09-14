@@ -31,6 +31,20 @@ class DatabaseSeeder extends Seeder
             'slug' => 'apex-gaming',
             'credit_balance' => 1500,
             'status' => 'active',
+            'max_api_keys' => 5,
+            'default_rate_limit' => 300,
+            'low_balance_threshold' => 250,
+            'contact_email' => 'crm@apexgaming.com',
+            'self_service_keys' => true,
+            'scoring_rules' => [
+                'super_vip_threshold_usd' => 400000,
+                'potential_vip_threshold_usd' => 100000,
+                'high_value_threshold_usd' => 25000,
+                'custom_rules' => [
+                    ['metric' => 'gambling_turnover_usd', 'operator' => '>=', 'value' => 50000, 'tag' => 'HIGH_ROLLER', 'tier' => null],
+                    ['metric' => 'transactions_count', 'operator' => '<', 'value' => 5, 'tag' => 'FRESH_WALLET', 'tier' => null],
+                ],
+            ],
             'webhook_url' => 'https://api.apexgaming.test/webhooks/onscore',
             'webhook_secret' => 'whsec_' . Str::random(32),
             'settings' => [
@@ -45,7 +59,16 @@ class DatabaseSeeder extends Seeder
             'name' => 'CRM Manager',
             'email' => 'crm@apexgaming.com',
             'password' => Hash::make('password123'),
-            'role' => 'user',
+            'role' => 'merchant_owner',
+            'status' => 'active',
+        ]);
+
+        User::create([
+            'account_id' => $demoAccount->id,
+            'name' => 'VIP Host',
+            'email' => 'vip@apexgaming.com',
+            'password' => Hash::make('password123'),
+            'role' => 'merchant_member',
             'status' => 'active',
         ]);
 

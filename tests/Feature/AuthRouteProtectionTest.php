@@ -23,6 +23,13 @@ class AuthRouteProtectionTest extends TestCase
         $response->assertRedirect('/login');
     }
 
+    public function test_guests_cannot_access_merchant_portal(): void
+    {
+        $this->get('/merchant')->assertRedirect('/login');
+        $this->get('/merchant/keys')->assertRedirect('/login');
+        $this->get('/merchant/scoring-rules')->assertRedirect('/login');
+    }
+
     public function test_admin_can_access_app_dashboard(): void
     {
         $account = Account::create([
