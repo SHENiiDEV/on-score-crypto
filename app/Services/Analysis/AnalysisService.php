@@ -12,6 +12,7 @@ use App\Services\Billing\CreditLedgerService;
 use App\Services\Blockchain\BlockchainProviderFactory;
 use App\Services\EntityAttribution\EntityAttributionService;
 use App\Services\Scoring\ScoringEngine;
+use App\Services\Behavioral\BehavioralPatternEngine;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -22,7 +23,10 @@ class AnalysisService
         private EntityAttributionService $attributionService,
         private ScoringEngine $scoringEngine,
         private CreditLedgerService $creditLedgerService,
-    ) {}
+        private ?BehavioralPatternEngine $behavioralEngine = null,
+    ) {
+        $this->behavioralEngine ??= new BehavioralPatternEngine();
+    }
 
     public function getCreditCost(string $network): int
     {
@@ -132,10 +136,13 @@ class AnalysisService
             // 5. Entity Attribution & CEX Exclusion
             $attribution = $this->attributionService->analyzeAttribution($onchainData);
 
-            // 6. Scoring Engine (with Client-specific custom rules)
-            $score = $this->scoringEngine->calculateScore($onchainData, $attribution, $account->scoring_rules);
+            // 6. Behavioral Pattern & Casino Footprint Analysis
+            $behavioral = $this->behavioralEngine->analyze($onchainData, $attribution);
 
-            // 7. Save Immutable Snapshot
+            // 7. Scoring Engine (with Client-specific custom rules & behavioral signals)
+            $score = $this->scoringEngine->calculateScore($onchainData, $attribution, $account->scoring_rules, $behavioral);
+
+            // 8. Save Immutable Snapshot
             $snapshot = AnalysisSnapshot::create([
                 'analysis_id' => $analysis->id,
                 'wallet_overview' => [
@@ -157,6 +164,7 @@ class AnalysisService
                 ],
                 'turnover' => $attribution['turnover'],
                 'gambling_intelligence' => $attribution['gambling'],
+                'behavioral_patterns' => $behavioral,
                 'counterparties' => $attribution['counterparties'],
                 'score_breakdown' => $score,
                 'provenance' => [

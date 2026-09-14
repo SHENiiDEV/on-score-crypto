@@ -9,7 +9,12 @@ class ScoringEngine
 {
     public const MODEL_VERSION = 'WPS-v1.0';
 
-    public function calculateScore(WalletOnchainData $rawData, array $attributionData, ?array $customRules = null): array
+    public function calculateScore(
+        WalletOnchainData $rawData,
+        array $attributionData,
+        ?array $customRules = null,
+        ?array $behavioralData = null
+    ): array
     {
         // Guard: If the wallet itself is an exchange pool (Bybit, etc.), it is not a player
         if ($attributionData['is_target_cex']) {
@@ -92,21 +97,41 @@ class ScoringEngine
             $keyDrivers[] = 'multi_brand_gambler';
         }
 
+        // Behavioral Casino Footprint Boost (Round amounts & Martingale)
+        if (!empty($behavioralData)) {
+            if ($behavioralData['round_deposits']['is_fixed_amount_depositor'] ?? false) {
+                $gmbScore = min(100, $gmbScore + 12);
+                $keyDrivers[] = 'recurrent_round_depositor';
+            }
+            if ($behavioralData['martingale_chasing']['detected'] ?? false) {
+                $gmbScore = min(100, $gmbScore + 10);
+                $keyDrivers[] = 'martingale_chasing_pattern';
+            }
+            if ($behavioralData['session_activity']['is_burst_session_player'] ?? false) {
+                $keyDrivers[] = 'burst_session_player';
+            }
+            if (($behavioralData['session_activity']['night_activity_percentage'] ?? 0) >= 50.0) {
+                $keyDrivers[] = 'night_owl_gambler';
+            }
+            foreach ($behavioralData['behavioral_tags'] ?? [] as $bTag) {
+                $customTags[] = $bTag;
+            }
+        }
+
         // 3. Subscore: Activity Recency (Weight: 15%)
         $now = Carbon::now();
         $daysSinceActive = $now->diffInDays($lastActivityAt);
         $recScore = 10;
 
         if ($lastGamblingActivity) {
-            $lastGmbCarbon = Carbon::parse($lastGamblingActivity);
-            $hoursSinceGambling = $now->diffInHours($lastGmbCarbon);
-            if ($hoursSinceGambling <= 48) {
+            $daysSinceGambling = $now->diffInDays(Carbon::parse($lastGamblingActivity));
+            if ($daysSinceGambling <= 7) {
                 $recScore = 100;
-                $keyDrivers[] = 'gambling_activity_last_48h';
-            } elseif ($hoursSinceGambling <= 168) { // 7 days
-                $recScore = 85;
-                $keyDrivers[] = 'gambling_activity_last_7d';
-            } elseif ($hoursSinceGambling <= 720) { // 30 days
+                $keyDrivers[] = 'gambling_active_this_week';
+            } elseif ($daysSinceGambling <= 30) {
+                $recScore = 80;
+                $keyDrivers[] = 'gambling_active_this_month';
+            } elseif ($daysSinceGambling <= 90) {
                 $recScore = 65;
             } else {
                 $recScore = 40;
@@ -180,6 +205,15 @@ class ScoringEngine
                 'tx_count' => (float)$rawData->totalTxCount,
                 'avg_tx_size_usd' => (float)$avgTxSize,
                 'overall_score' => (float)$totalScore,
+                // Behavioral Metrics
+                'round_tx_percentage' => (float)($behavioralData['round_deposits']['round_percentage'] ?? 0),
+                'is_fixed_amount_depositor' => (float)(!empty($behavioralData['round_deposits']['is_fixed_amount_depositor']) ? 1 : 0),
+                'martingale_detected' => (float)(!empty($behavioralData['martingale_chasing']['detected']) ? 1 : 0),
+                'night_activity_percentage' => (float)($behavioralData['session_activity']['night_activity_percentage'] ?? 0),
+                'weekend_activity_percentage' => (float)($behavioralData['session_activity']['weekend_activity_percentage'] ?? 0),
+                'whale_potential_score' => (float)($behavioralData['whale_potential_score'] ?? 0),
+                'session_intensity' => (float)($behavioralData['session_activity']['max_session_tx_count'] ?? 0),
+                'fast_reload_count' => (float)($behavioralData['velocity_cycles']['fast_reload_count'] ?? 0),
             ];
 
             foreach ($clientRules as $rule) {

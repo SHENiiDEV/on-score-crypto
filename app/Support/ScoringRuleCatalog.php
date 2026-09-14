@@ -51,6 +51,46 @@ class ScoringRuleCatalog
                 'unit' => '0–100',
                 'hint' => 'The computed On-Score value before custom overrides.',
             ],
+            'round_tx_percentage' => [
+                'label' => 'Round deposit percentage',
+                'unit' => '%',
+                'hint' => 'Share of outgoing transactions with round amounts ($50, $100, $200, $500).',
+            ],
+            'is_fixed_amount_depositor' => [
+                'label' => 'Fixed amount depositor flag',
+                'unit' => '1 / 0',
+                'hint' => 'Flag (1) if wallet repeatedly deposits identical/round denominations.',
+            ],
+            'martingale_detected' => [
+                'label' => 'Martingale loss-chasing pattern',
+                'unit' => '1 / 0',
+                'hint' => 'Flag (1) if rapid doubling / escalating sequences were detected.',
+            ],
+            'night_activity_percentage' => [
+                'label' => 'Night activity share',
+                'unit' => '%',
+                'hint' => 'Percentage of activity between 22:00 and 06:00 UTC.',
+            ],
+            'weekend_activity_percentage' => [
+                'label' => 'Weekend activity share',
+                'unit' => '%',
+                'hint' => 'Percentage of activity on weekends (Fri night to Sun).',
+            ],
+            'whale_potential_score' => [
+                'label' => 'Whale potential index',
+                'unit' => '0–100',
+                'hint' => 'Predictive LTV model rating probability of reaching high-roller volume.',
+            ],
+            'session_intensity' => [
+                'label' => 'Session intensity (Max burst txs)',
+                'unit' => 'tx/session',
+                'hint' => 'Peak number of transactions clustered in a single rapid gaming session.',
+            ],
+            'fast_reload_count' => [
+                'label' => 'Fast reload count',
+                'unit' => 'reloads',
+                'hint' => 'Occurrences of back-to-back deposits within < 15 minutes.',
+            ],
         ];
     }
 
