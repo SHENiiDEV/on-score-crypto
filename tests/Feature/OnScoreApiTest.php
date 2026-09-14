@@ -209,7 +209,7 @@ class OnScoreApiTest extends TestCase
 
         $dashResp = $this->actingAs($admin)->get('/app');
         $dashResp->assertStatus(200)
-            ->assertSee('OnScore')
+            ->assertSee('On-Score')
             ->assertSee('Apex Gaming Group');
 
         $postResp = $this->actingAs($admin)->post('/analyze', [
